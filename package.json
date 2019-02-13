@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://rafaldoranczyk.github.io/hangmanGame/",
   "dependencies": {
+    "gh-pages": "^2.0.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",
     "react-keyboard-event-handler": "^1.4.1",
