@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PhraseToGuess from '../components/PhraseToGuess/PhraseToGuess';
 import LettersToClick from '../components/LettersToClick/LettersToClick'
 import Layout from '../components/Layout/Layout'
-
+import HangmanDrawing from '../components/HangmanDrawing/HangmanDrawing'
+import InfoAndHint from '../components/InfoAndHint/InfoAndHint';
 
 class App extends Component {
 
@@ -34,6 +35,7 @@ class App extends Component {
       { letter: 'v', isClicked: false },
       { letter: 'w', isClicked: false },
       { letter: 'y', isClicked: false },
+      { letter: 'x', isClicked: false },
       { letter: 'z', isClicked: false },
     ],
     mistakes: 0,
@@ -104,6 +106,8 @@ class App extends Component {
     const { playerLetter, phraseToGuess, lettersToClick } = this.state
     return (
       <Layout>
+        <InfoAndHint />
+        <HangmanDrawing />
         <PhraseToGuess
           phraseToGuess={phraseToGuess}
           playerLetter={playerLetter} />

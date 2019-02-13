@@ -5,10 +5,12 @@ const Letter = styled.span`
 display: flex;
 justify-content: center;
 align-items: center;
-border: 2px solid black;
+border: 1px solid black;
 height: 4rem;
 width: 4rem;
-margin: 10px;
+margin: 1px;
+font-size: 1.4rem;
+font-weight: 700;
 background-color: ${({ isClicked }) => isClicked ? '#222' : '#aaa'};
 `
 

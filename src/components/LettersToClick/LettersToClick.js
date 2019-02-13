@@ -3,9 +3,13 @@ import LetterToClick from './LetterToClick/LetterToClick';
 import styled from 'styled-components';
 
 const LettersWrapper = styled.div`
+flex-basis: 30%;
 display: flex;
 flex-flow: row wrap;
-margin-top: 100px;
+justify-content: center;
+align-items: center;
+background-color: #111;
+overflow: hidden;
 `
 
 const LettersToClick = ({ lettersToClick, clickLetter }) => {
