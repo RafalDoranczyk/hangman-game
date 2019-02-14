@@ -3,28 +3,24 @@ import Letters from './Letters/Letters';
 import styled from 'styled-components';
 
 const PhraseToGuessWrapper = styled.div`
-flex-basis: 15%;
+flex-basis: 25%;
 display: flex;
-flex-flow: column nowrap;
+flex-flow: column wrap;
 justify-content: space-around;
 align-items: center;
-background-color: blue;
+background-color: #222629;
+color: #ddd;
 `
 
 
-const PhraseToGuess = ({ playerLetter, phraseToGuess }) => {
-
-
-    const clickedKeyInfo = playerLetter ?
-        <h2>Your last letter: {playerLetter}</h2> :
-        <h2>Press or click key to start!</h2>
+const PhraseToGuess = ({ phraseToGuess }) => {
 
     return (
         <PhraseToGuessWrapper>
-            {clickedKeyInfo}
             <Letters
                 phraseToGuess={phraseToGuess}
             />
+
         </PhraseToGuessWrapper>
     );
 }

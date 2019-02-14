@@ -8,35 +8,35 @@ import InfoAndHint from '../components/InfoAndHint/InfoAndHint';
 class App extends Component {
 
   state = {
-    playerLetter: '',
+
     phraseToGuess: [],
     lettersToClick: [
-      { letter: 'a', isClicked: false },
-      { letter: 'b', isClicked: false },
-      { letter: 'c', isClicked: false },
-      { letter: 'd', isClicked: false },
-      { letter: 'e', isClicked: false },
-      { letter: 'f', isClicked: false },
-      { letter: 'g', isClicked: false },
-      { letter: 'h', isClicked: false },
-      { letter: 'i', isClicked: false },
-      { letter: 'j', isClicked: false },
-      { letter: 'k', isClicked: false },
-      { letter: 'l', isClicked: false },
-      { letter: 'm', isClicked: false },
-      { letter: 'n', isClicked: false },
-      { letter: 'o', isClicked: false },
-      { letter: 'p', isClicked: false },
-      { letter: 'q', isClicked: false },
-      { letter: 'r', isClicked: false },
-      { letter: 's', isClicked: false },
-      { letter: 't', isClicked: false },
-      { letter: 'u', isClicked: false },
-      { letter: 'v', isClicked: false },
-      { letter: 'w', isClicked: false },
-      { letter: 'y', isClicked: false },
-      { letter: 'x', isClicked: false },
-      { letter: 'z', isClicked: false },
+      { letter: 'a', isClicked: false, isHit: false },
+      { letter: 'b', isClicked: false, isHit: false },
+      { letter: 'c', isClicked: false, isHit: false },
+      { letter: 'd', isClicked: false, isHit: false },
+      { letter: 'e', isClicked: false, isHit: false },
+      { letter: 'f', isClicked: false, isHit: false },
+      { letter: 'g', isClicked: false, isHit: false },
+      { letter: 'h', isClicked: false, isHit: false },
+      { letter: 'i', isClicked: false, isHit: false },
+      { letter: 'j', isClicked: false, isHit: false },
+      { letter: 'k', isClicked: false, isHit: false },
+      { letter: 'l', isClicked: false, isHit: false },
+      { letter: 'm', isClicked: false, isHit: false },
+      { letter: 'n', isClicked: false, isHit: false },
+      { letter: 'o', isClicked: false, isHit: false },
+      { letter: 'p', isClicked: false, isHit: false },
+      { letter: 'q', isClicked: false, isHit: false },
+      { letter: 'r', isClicked: false, isHit: false },
+      { letter: 's', isClicked: false, isHit: false },
+      { letter: 't', isClicked: false, isHit: false },
+      { letter: 'u', isClicked: false, isHit: false },
+      { letter: 'v', isClicked: false, isHit: false },
+      { letter: 'w', isClicked: false, isHit: false },
+      { letter: 'y', isClicked: false, isHit: false },
+      { letter: 'x', isClicked: false, isHit: false },
+      { letter: 'z', isClicked: false, isHit: false },
     ],
     mistakes: 0,
   }
@@ -46,17 +46,21 @@ class App extends Component {
   // THESE TWO FUNCTION CAN BE ONE
 
   pressLetterHandler = (playerLetter) => {
-    const { phraseToGuess, lettersToClick } = this.state
+    const { lettersToClick, phraseToGuess } = this.state;
     const index = lettersToClick.findIndex(letterToClick => (
-      letterToClick.letter.toUpperCase() === playerLetter.toUpperCase()));
-
+      letterToClick.letter.toUpperCase() === playerLetter)
+    );
+    if (lettersToClick[index].isClicked) return
     if (index !== -1) {
-      if (lettersToClick[index].isClicked) return
-
-      this.setState({ playerLetter })
       lettersToClick[index].isClicked = true
-      phraseToGuess.map(phrase => phrase.name === playerLetter ? phrase.isShowed = true : false
-      );
+
+      phraseToGuess.map(phrase => {
+        if (phrase.name === playerLetter) {
+          phrase.isShowed = true;
+          lettersToClick[index].isHit = true;
+        }
+      }
+      )
       this.setState({ phraseToGuess, lettersToClick });
     } else return;
   }
@@ -68,14 +72,15 @@ class App extends Component {
     const index = lettersToClick.findIndex(letterToClick => (
       letterToClick.letter.toUpperCase() === target.toUpperCase()
     ));
-    if (!lettersToClick[index].isClicked) {
-      this.setState({ playerLetter: target })
-    }
     lettersToClick[index].isClicked = true
-    phraseToGuess.map(phrase => phrase.name === target ? phrase.isShowed = true : false
-    );
+    phraseToGuess.map(phrase => {
+      if (phrase.name === target) {
+        phrase.isShowed = true;
+        lettersToClick[index].isHit = true;
+      }
+    }
+    )
 
-    console.log(lettersToClick[index]);
     this.setState({ phraseToGuess, lettersToClick });
 
   }
@@ -88,7 +93,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const fetchedPhrase = 'aleksander';
+    const fetchedPhrase = 'Sahara Desert';
     const { phraseToGuess } = this.state;
     [...fetchedPhrase].map((phrase, index) => {
       return phraseToGuess.push({
@@ -97,20 +102,23 @@ class App extends Component {
         isShowed: false,
       })
     })
+    phraseToGuess.filter(phrase => (
+      phrase.name === " " || phrase.name === "," || phrase.name === "-" ? phrase.isShowed = true : phrase.isShowed = false)
+    )
     this.setState({ phraseToGuess })
   }
 
 
   render() {
-
-    const { playerLetter, phraseToGuess, lettersToClick } = this.state
+    console.log(this.state.lettersToClick);
+    const { phraseToGuess, lettersToClick } = this.state
     return (
       <Layout>
         <InfoAndHint />
         <HangmanDrawing />
         <PhraseToGuess
           phraseToGuess={phraseToGuess}
-          playerLetter={playerLetter} />
+        />
         <LettersToClick
           lettersToClick={lettersToClick}
           clickLetter={this.clickLetterHandler}

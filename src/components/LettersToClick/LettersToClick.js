@@ -3,12 +3,12 @@ import LetterToClick from './LetterToClick/LetterToClick';
 import styled from 'styled-components';
 
 const LettersWrapper = styled.div`
-flex-basis: 30%;
+flex-basis: 35%;
 display: flex;
 flex-flow: row wrap;
 justify-content: center;
 align-items: center;
-background-color: #111;
+background-color: #0b0c10;
 overflow: hidden;
 `
 
@@ -17,8 +17,9 @@ const LettersToClick = ({ lettersToClick, clickLetter }) => {
     const letters = lettersToClick.map(letterToClick => (
         <LetterToClick
             clickLetter={(e) => { clickLetter(e) }}
-            key={letterToClick.letter}
             isClicked={letterToClick.isClicked}
+            key={letterToClick.letter}
+            isHit={letterToClick.isHit}
             letter={letterToClick.letter.toUpperCase()} />
     ))
 

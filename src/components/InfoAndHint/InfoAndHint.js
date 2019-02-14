@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 const InfoAndHintWrapper = styled.div`
-flex-basis: 10%;
+flex-basis: 5%;
 display: flex;
 flex-flow: column nowrap;
 justify-content: space-around;
 align-items: center;
-background-color: yellow;
+background-color: #46344e;
 `
 const infoAndHint = props => {
     return (
