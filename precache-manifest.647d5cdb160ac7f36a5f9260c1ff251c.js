@@ -4,15 +4,15 @@ self.__precacheManifest = [
     "url": "/hangman-game/static/js/runtime~main.ffea54f9.js"
   },
   {
-    "revision": "fe3a71c7ddcb5f38c8d5",
-    "url": "/hangman-game/static/js/main.fe3a71c7.chunk.js"
+    "revision": "d1b6283683f04a681bcb",
+    "url": "/hangman-game/static/js/main.d1b62836.chunk.js"
   },
   {
     "revision": "8c0daedf57cf366fb4b7",
     "url": "/hangman-game/static/js/2.8c0daedf.chunk.js"
   },
   {
-    "revision": "b64343413b1e76edc1aaa080ec959ce8",
+    "revision": "4203661b7b0d49d6474c9a89ffd5336d",
     "url": "/hangman-game/index.html"
   }
 ];
