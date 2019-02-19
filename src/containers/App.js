@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
-import PhraseToGuessSection from '../components/PhraseToGuessSection/PhraseToGuessSection';
-import LettersToClickSection from '../components/LettersToClickSection/LettersToClickSection'
-import Layout from '../components/Layout/Layout'
+import Layout from '../components/Layout/Layout';
 import DrawingAndInfoSectionWrapper from '../components/DrawingAndInfoSection/DrawingAndInfoSection';
-import axios from 'axios'
+import PhraseToGuessSection from '../components/PhraseToGuessSection/PhraseToGuessSection';
+import LettersToClickSection from '../components/LettersToClickSection/LettersToClickSection';
+
 
 const API = ' https://hangman-239ba.firebaseio.com/.json';
 
 class App extends Component {
 
   state = {
-
-    phraseToGuess: [],
-    lettersToClick: [
+    phraseToGuess: [],                                //phrase comes from API in componentDidMount
+    lettersToClick: [                                 //letters in layout, possible to click or press (keyboard)
       { letter: 'a', isClicked: false, isHit: false },
       { letter: 'b', isClicked: false, isHit: false },
       { letter: 'c', isClicked: false, isHit: false },
@@ -40,58 +39,58 @@ class App extends Component {
       { letter: 'x', isClicked: false, isHit: false },
       { letter: 'z', isClicked: false, isHit: false },
     ],
-    mistakesLeft: 0,
-    time: 0,
-    timeToNextLetter: 5,
-    lastClickedLetter: 0
+    timeToNextLetter: 5,                              //if time === 0 => random letter is clicked 
+    mistakesLeft: 6,                                  // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
   }
 
+  startTimeToNextLetterHandler = () => {
+    this.ID = setInterval(() => {
+      this.setState({ timeToNextLetter: this.state.timeToNextLetter - 1 })
+    }, 1000);
+  }
 
-  isLetterHitHandler = () => {
-
+  isSelectedLetterInPhraseHandler = (selectedLetterObj) => {
+    const { phraseToGuess } = this.state
+    const letterInPhrase = phraseToGuess.find(letterObj => letterObj.letter === selectedLetterObj.letter.toUpperCase())
+    const selectedLetter = selectedLetterObj.letter.toUpperCase()
+    selectedLetterObj.isClicked = true;
+    if (letterInPhrase) {
+      selectedLetterObj.isHit = true;
+      phraseToGuess.forEach(letterObj => {
+        if (letterObj.letter === selectedLetter) {
+          letterObj.isLetterShowed = true;
+        }
+      })
+    }
+    else {
+      this.setState({ mistakesLeft: this.state.mistakesLeft - 1 })
+    }
   }
 
   clickOrPressKeyLetterHandler = (e, key) => {
     const { lettersToClick, phraseToGuess, } = this.state
     const clickedLetter = e.target.textContent
-    const pressedLetter = key
-    const index = lettersToClick.findIndex(letterToClick => {
-      let index;
-      if (key) {
-        index = letterToClick.letter.toUpperCase() === pressedLetter.toUpperCase()
-      }
-      else if (clickedLetter) {
-        index = letterToClick.letter.toUpperCase() === clickedLetter.toUpperCase();
-      }
-      return index;
+    let pressedOrClickedLetter;
 
-    });
+    if (key) {
+      pressedOrClickedLetter = key.toUpperCase()
+    }
+    else if (clickedLetter) {
+      pressedOrClickedLetter = e.target.textContent;
+    }
+
+    const index = lettersToClick.findIndex(letter => letter.letter.toUpperCase() === pressedOrClickedLetter);
+
     if (index === -1 || lettersToClick[index].isClicked) return
 
-    lettersToClick[index].isClicked = true
-    phraseToGuess.map(letterObj => {
-      if (letterObj.letter === clickedLetter || (pressedLetter && pressedLetter.toUpperCase() === letterObj.letter)) {
-        letterObj.isLetterShowed = true;
-        lettersToClick[index].isHit = true;
-      }
-      return letterObj;
-    }
-    )
-    this.setState({ phraseToGuess, lettersToClick, });
+    const selectedLetterObj = lettersToClick[index]
+    this.isSelectedLetterInPhraseHandler(selectedLetterObj)
     clearInterval(this.ID)
-    this.start()
-
-
+    this.setState({ phraseToGuess, lettersToClick, timeToNextLetter: 5 });
+    this.startTimeToNextLetterHandler();
   }
 
-  start = () => {
-    let time = 5
-    this.ID = setInterval(() => {
-      this.setState({ timeToNextLetter: time-- })
-    }, 1000);
-  }
-
-
+  //autoclick letter
   componentDidUpdate(prevProps, prevState) {
 
     if (prevState.timeToNextLetter !== this.state.timeToNextLetter) {
@@ -99,31 +98,26 @@ class App extends Component {
       const lettersToClick = prevState.lettersToClick;
       const filteredLetters = lettersToClick.filter(letterToClick => !letterToClick.isClicked);
       const random = Math.floor(Math.random() * filteredLetters.length);
+      //this is random clicked letter
       const autoClicked = filteredLetters[random];
-      if (this.state.timeToNextLetter === 0) {
-        clearInterval(this.ID)
-        autoClicked.isClicked = true;
-        phraseToGuess.map(letterObj => {
-          if (letterObj.letter === autoClicked.letter.toUpperCase()) {
-            autoClicked.isHit = true;
-            letterObj.isLetterShowed = true
-          }
-          return letterObj
-        })
-        this.setState({ phraseToGuess, lettersToClick })
-        this.start()
 
+      if (this.state.timeToNextLetter === 0) {
+        this.isSelectedLetterInPhraseHandler(autoClicked);
+        this.setState({ phraseToGuess, lettersToClick });
+        clearInterval(this.ID);
+        setTimeout(() => {
+          this.setState({ timeToNextLetter: 5 })
+          this.startTimeToNextLetterHandler();
+        }, 1000)
       }
 
     }
-  }
 
-  componentWillMount() {
-    this.start()
   }
 
   componentDidMount() {
 
+    // this.startTimeToNextLetterHandler()
     document.addEventListener('keypress', (e) => this.clickOrPressKeyLetterHandler(e, e.key));
     const fetchedPhrase = 'Great Wall of China';
     const { phraseToGuess } = this.state;
@@ -141,21 +135,25 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-
     document.removeEventListener('keypress', this.clickOrPressKeyLetterHandler)
   }
 
   render() {
+    const {
+      phraseToGuess,
+      lettersToClick,
+      timeToNextLetter,
+      mistakesLeft
+    } = this.state
 
-    const { phraseToGuess, lettersToClick, timeToNextLetter, mistakesLeft } = this.state
     return (
+
       <Layout>
         <DrawingAndInfoSectionWrapper
-          timeToNextLetter={timeToNextLetter}
           mistakesLeft={mistakesLeft}
+          timeToNextLetter={timeToNextLetter}
         />
         <PhraseToGuessSection
-
           phraseToGuess={phraseToGuess}
         />
         <LettersToClickSection

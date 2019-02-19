@@ -1,11 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Head } from './HangmanParts/Head'
-import { Body } from './HangmanParts/Body'
-import { LeftArm } from './HangmanParts/LeftArm'
-import { RightArm } from './HangmanParts/RightArm';
-import { LeftLeg } from './HangmanParts/LeftLeg';
-import { connect } from 'tls';
+import { Body, Head, LeftArm, LeftLeg, RightArm } from './HangmanParts/HangmanParts'
 
 const HangmanDrawingWrapper = styled.div`
 flex-basis: 50%;
@@ -20,14 +15,15 @@ left:0;
 
 const hangmanDrawingSection = ({ mistakesLeft }) => {
     let content;
-
     switch (mistakesLeft) {
-        case 1:
-            return <Head />
+        case (6):
+            content = <Body />;
             break;
-        case 2:
-            return (<><Head /> <Body /></>)
+        case (5):
+            content = <> <Body /> <Head /> </>
+            break;
     }
+
 
     return (
         <HangmanDrawingWrapper>
