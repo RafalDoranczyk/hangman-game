@@ -1,11 +1,11 @@
 {
-  "main.js": "/hangman-game/static/js/main.1b869eb4.chunk.js",
-  "main.js.map": "/hangman-game/static/js/main.1b869eb4.chunk.js.map",
+  "main.js": "/hangman-game/static/js/main.fdc2fd6e.chunk.js",
+  "main.js.map": "/hangman-game/static/js/main.fdc2fd6e.chunk.js.map",
   "runtime~main.js": "/hangman-game/static/js/runtime~main.ffea54f9.js",
   "runtime~main.js.map": "/hangman-game/static/js/runtime~main.ffea54f9.js.map",
-  "static/js/2.56892a29.chunk.js": "/hangman-game/static/js/2.56892a29.chunk.js",
-  "static/js/2.56892a29.chunk.js.map": "/hangman-game/static/js/2.56892a29.chunk.js.map",
+  "static/js/2.8c0daedf.chunk.js": "/hangman-game/static/js/2.8c0daedf.chunk.js",
+  "static/js/2.8c0daedf.chunk.js.map": "/hangman-game/static/js/2.8c0daedf.chunk.js.map",
   "index.html": "/hangman-game/index.html",
-  "precache-manifest.a315f395520b444a9240f80b63dcbb19.js": "/hangman-game/precache-manifest.a315f395520b444a9240f80b63dcbb19.js",
+  "precache-manifest.d94d7210159fdd779bd76cd107d96a40.js": "/hangman-game/precache-manifest.d94d7210159fdd779bd76cd107d96a40.js",
   "service-worker.js": "/hangman-game/service-worker.js"
 }
