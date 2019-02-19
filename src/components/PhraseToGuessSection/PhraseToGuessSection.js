@@ -4,20 +4,21 @@ import styled from 'styled-components';
 
 const PhraseToGuessWrapper = styled.div`
 flex-basis: 25%;
+width: 100%;
 display: flex;
 flex-flow: column wrap;
 justify-content: space-around;
 align-items: center;
-background-color: #222629;
-color: #ddd;
+background-color: #000;
+color: #050311;
 `
-
 
 const PhraseToGuess = ({ phraseToGuess }) => {
 
     return (
         <PhraseToGuessWrapper>
             <Letters
+
                 phraseToGuess={phraseToGuess}
             />
 

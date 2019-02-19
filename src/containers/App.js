@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import PhraseToGuess from '../components/PhraseToGuess/PhraseToGuess';
-import LettersToClick from '../components/LettersToClick/LettersToClick'
+import PhraseToGuessSection from '../components/PhraseToGuessSection/PhraseToGuessSection';
+import LettersToClickSection from '../components/LettersToClickSection/LettersToClickSection'
 import Layout from '../components/Layout/Layout'
-import HangmanDrawing from '../components/HangmanDrawing/HangmanDrawing'
-import InfoAndHint from '../components/InfoAndHint/InfoAndHint';
+import DrawingAndInfoSectionWrapper from '../components/DrawingAndInfoSection/DrawingAndInfoSection';
+import axios from 'axios'
+
+const API = ' https://hangman-239ba.firebaseio.com/.json';
 
 class App extends Component {
 
@@ -38,90 +40,127 @@ class App extends Component {
       { letter: 'x', isClicked: false, isHit: false },
       { letter: 'z', isClicked: false, isHit: false },
     ],
-    mistakes: 0,
+    mistakesLeft: 0,
+    time: 0,
+    timeToNextLetter: 5,
+    lastClickedLetter: 0
   }
 
 
+  isLetterHitHandler = () => {
 
-  // THESE TWO FUNCTION CAN BE ONE
-
-  pressLetterHandler = (playerLetter) => {
-    const { lettersToClick, phraseToGuess } = this.state;
-    const index = lettersToClick.findIndex(letterToClick => (
-      letterToClick.letter.toUpperCase() === playerLetter)
-    );
-    if (lettersToClick[index].isClicked) return
-    if (index !== -1) {
-      lettersToClick[index].isClicked = true
-
-      phraseToGuess.map(phrase => {
-        if (phrase.name === playerLetter) {
-          phrase.isShowed = true;
-          lettersToClick[index].isHit = true;
-        }
-      }
-      )
-      this.setState({ phraseToGuess, lettersToClick });
-    } else return;
   }
 
-  clickLetterHandler = (e) => {
+  clickOrPressKeyLetterHandler = (e, key) => {
     const { lettersToClick, phraseToGuess, } = this.state
-    const target = e.target.textContent;
+    const clickedLetter = e.target.textContent
+    const pressedLetter = key
+    const index = lettersToClick.findIndex(letterToClick => {
+      let index;
+      if (key) {
+        index = letterToClick.letter.toUpperCase() === pressedLetter.toUpperCase()
+      }
+      else if (clickedLetter) {
+        index = letterToClick.letter.toUpperCase() === clickedLetter.toUpperCase();
+      }
+      return index;
 
-    const index = lettersToClick.findIndex(letterToClick => (
-      letterToClick.letter.toUpperCase() === target.toUpperCase()
-    ));
+    });
+    if (index === -1 || lettersToClick[index].isClicked) return
+
     lettersToClick[index].isClicked = true
-    phraseToGuess.map(phrase => {
-      if (phrase.name === target) {
-        phrase.isShowed = true;
+    phraseToGuess.map(letterObj => {
+      if (letterObj.letter === clickedLetter || (pressedLetter && pressedLetter.toUpperCase() === letterObj.letter)) {
+        letterObj.isLetterShowed = true;
         lettersToClick[index].isHit = true;
       }
+      return letterObj;
     }
     )
+    this.setState({ phraseToGuess, lettersToClick, });
+    clearInterval(this.ID)
+    this.start()
 
-    this.setState({ phraseToGuess, lettersToClick });
 
   }
 
+  start = () => {
+    let time = 5
+    this.ID = setInterval(() => {
+      this.setState({ timeToNextLetter: time-- })
+    }, 1000);
+  }
 
+
+  componentDidUpdate(prevProps, prevState) {
+
+    if (prevState.timeToNextLetter !== this.state.timeToNextLetter) {
+      const { phraseToGuess } = this.state
+      const lettersToClick = prevState.lettersToClick;
+      const filteredLetters = lettersToClick.filter(letterToClick => !letterToClick.isClicked);
+      const random = Math.floor(Math.random() * filteredLetters.length);
+      const autoClicked = filteredLetters[random];
+      if (this.state.timeToNextLetter === 0) {
+        clearInterval(this.ID)
+        autoClicked.isClicked = true;
+        phraseToGuess.map(letterObj => {
+          if (letterObj.letter === autoClicked.letter.toUpperCase()) {
+            autoClicked.isHit = true;
+            letterObj.isLetterShowed = true
+          }
+          return letterObj
+        })
+        this.setState({ phraseToGuess, lettersToClick })
+        this.start()
+
+      }
+
+    }
+  }
 
   componentWillMount() {
-    document.addEventListener("keypress", (e) => this.pressLetterHandler(e.key.toUpperCase()))
-
+    this.start()
   }
 
   componentDidMount() {
-    const fetchedPhrase = 'Sahara Desert';
+
+    document.addEventListener('keypress', (e) => this.clickOrPressKeyLetterHandler(e, e.key));
+    const fetchedPhrase = 'Great Wall of China';
     const { phraseToGuess } = this.state;
     [...fetchedPhrase].map((phrase, index) => {
       return phraseToGuess.push({
-        name: phrase.toUpperCase(),
+        letter: phrase.toUpperCase(),
         id: index,
-        isShowed: false,
+        isLetterShowed: false,
       })
     })
-    phraseToGuess.filter(phrase => (
-      phrase.name === " " || phrase.name === "," || phrase.name === "-" ? phrase.isShowed = true : phrase.isShowed = false)
+    phraseToGuess.filter(letterObj => (
+      letterObj.letter === " " || letterObj.letter === "," || letterObj.letter === "-" ? letterObj.isLetterShowed = true : letterObj.isLetterShowed = false)
     )
     this.setState({ phraseToGuess })
   }
 
+  componentWillUnmount() {
+
+    document.removeEventListener('keypress', this.clickOrPressKeyLetterHandler)
+  }
 
   render() {
-    console.log(this.state.lettersToClick);
-    const { phraseToGuess, lettersToClick } = this.state
+
+    const { phraseToGuess, lettersToClick, timeToNextLetter, mistakesLeft } = this.state
     return (
       <Layout>
-        <InfoAndHint />
-        <HangmanDrawing />
-        <PhraseToGuess
+        <DrawingAndInfoSectionWrapper
+          timeToNextLetter={timeToNextLetter}
+          mistakesLeft={mistakesLeft}
+        />
+        <PhraseToGuessSection
+
           phraseToGuess={phraseToGuess}
         />
-        <LettersToClick
+        <LettersToClickSection
           lettersToClick={lettersToClick}
-          clickLetter={this.clickLetterHandler}
+          clickLetter={this.clickOrPressKeyLetterHandler}
         />
       </Layout>
     );

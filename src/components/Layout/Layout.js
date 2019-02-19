@@ -22,12 +22,9 @@ background-color: #444;
 height: 100vh;
 overflow: hidden;
 display: flex;
-flex-flow: column nowrap;
+flex-flow: column wrap;
 justify-content: space-evenly;
 align-items: center;
-&>*{
-    width: 100%;
-}
 `
 
 const layout = (props) =>

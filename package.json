@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://rafaldoranczyk.github.io/hangman-game/",
   "dependencies": {
+    "axios": "^0.18.0",
     "gh-pages": "^2.0.1",
     "react": "^16.8.1",
     "react-dom": "^16.8.1",

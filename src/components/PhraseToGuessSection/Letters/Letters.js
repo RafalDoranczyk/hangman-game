@@ -3,39 +3,42 @@ import Letter from './Letter/Letter';
 import styled from 'styled-components';
 
 const LettersWrapper = styled.div`
-flex-basis: 80%;
-width: 80%;
+flex-basis: 90%;
 display: flex;
 flex-flow: row wrap;
 align-items: center;
 justify-content: center;
+align-content: space-around;
+text-align: center;
 `
 const BreakLine = styled.div`
 flex-basis: 100%;
-height: 10%;
+height: 1%;
 `
 
-const Space = styled.div`
-flex-basis: 10%;
-height: 10%;
-`
+
 
 const letters = ({ phraseToGuess }) => {
-    const letters = phraseToGuess.map(letter => {
-        if (letter.name !== " ")
-            return (
-                <Letter
-                    key={letter.id}
-                    letter={letter}
-                />)
-        else if (letter.name === " ") return <BreakLine />
-        return <Space />
+
+    const letters = phraseToGuess.map(letterObj => {
+        let letters;
+        if (letterObj.letter !== " ") {
+            letters = <Letter
+                key={letterObj.id}
+                letterObj={letterObj}
+            />
+        }
+        else if (letterObj.letter === " ") {
+            letters = <BreakLine />
+        }
+        return letters;
     }
     )
 
     return (
         <LettersWrapper>
             {letters}
+
         </LettersWrapper>
     );
 }
