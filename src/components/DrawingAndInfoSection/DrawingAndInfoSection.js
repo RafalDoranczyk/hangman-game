@@ -13,7 +13,16 @@ overflow: hidden;
 position: relative;
 top: 0;
 left: 0;
-
+&::after{
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: 35%;
+    right: 48%;
+    height: 200%;
+    transform: rotate(5deg);
+    background-color:#0B091F;
+}
 `
 const DrawingAndInfoSection = ({ timeToNextLetter, mistakesLeft }) => (
     <DrawingAndInfoSectionWrapper>
@@ -22,6 +31,7 @@ const DrawingAndInfoSection = ({ timeToNextLetter, mistakesLeft }) => (
             mistakesLeft={mistakesLeft}
         />
         <GameInfo
+            mistakesLeft={mistakesLeft}
             timeToNextLetter={timeToNextLetter}
         />
     </DrawingAndInfoSectionWrapper>

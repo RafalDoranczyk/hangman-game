@@ -5,53 +5,74 @@ const GameInfoWrapper = styled.div`
 flex-basis: 50%;
 background-color: #D6D6D8;
 display: flex;
+flex-flow: row nowrap;
+justify-content: flex-end;
+text-align: center;
+
+*{
+    color: #000;
+  
+}
+span{
+    display: block;
+    width: 80%;
+    margin: 1rem auto;
+}
+`
+const Info = styled.div`
+flex-basis: 87.5%;
+/* background-color: red; */
+display: flex;
+flex-flow: row wrap;
+justify-content: space-around;
+align-items: flex-end;
+`
+
+const Category = styled.p`
+    flex-basis: 100%;
+    height: 30%;
+    font-weight: 700;
+`
+const Hint = styled.p`
+    flex-basis: 100%;
+    height: 30%;
+    font-weight: 700;
+`
+const MistakesLeft = styled.div`
+flex-basis: 40%;
+height: 20%;
+display: flex;
 justify-content: center;
 align-items: center;
-text-align: center;
-&::after{
-    content: '';
-    position: absolute;
-    top: -20px;
-    left: calc(50% - 25px);
-    height: 120%;
-    background-color: #D6D6D8;
-    width: 30px;
-    transform: rotate(5deg);
-    transform-origin: 0 100%;
-}
-
-div{
-    flex-basis: 85%;
-    height: 100%;
-    /* background-color: red; */
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-    justify-content: space-around;
- 
-}
-div *{
-  letter-spacing: 1px;
-    color: #000;
-    margin-top: 5%;
-}
-em{
-    display: block;
-    width: 100%;
-}
-
+font-size: 2rem;
+background-color: #0B091F;
+border-radius: 20%;
+color: #D6D6D8;
 `
 
 
-const GameInfoSection = ({ timeToNextLetter }) => {
+const TimeToNextLetterWrapper = styled.div`
+flex-basis: 40%;
+height: 20%;
+display: flex;
+justify-content: center;
+align-items: center;
+font-size: 2rem;
+background-color: #000;
+border-radius: 20%;
+color: #D6D6D8;
+`
+
+
+const GameInfoSection = ({ timeToNextLetter, mistakesLeft }) => {
     return (
         <GameInfoWrapper>
-            <div>
-
-                <h3>Category: <em>Famous Buildigings</em></h3>
-                <h4>Hint: <em>One of the highest bulding in the world</em></h4>
-                <h3>Next letter appears in: <em>{timeToNextLetter} s</em></h3>
-            </div>
+            <Info>
+                <Category>Category: <span>Famous Buildings </span> </Category>
+                <Hint>Hint: <span> One of the highest buildings in Europe</span></Hint>
+                <MistakesLeft>{mistakesLeft}</MistakesLeft>
+                <TimeToNextLetterWrapper>{timeToNextLetter} </TimeToNextLetterWrapper>
+            </Info>
         </GameInfoWrapper>
     );
 }

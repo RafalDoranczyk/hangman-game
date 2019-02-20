@@ -10,8 +10,8 @@ const API = ' https://hangman-239ba.firebaseio.com/.json';
 class App extends Component {
 
   state = {
-    phraseToGuess: [],                                //phrase comes from API in componentDidMount
-    lettersToClick: [                                 //letters in layout, possible to click or press (keyboard)
+    phraseToGuess: [],          //phrase comes from API in componentDidMount
+    lettersToClick: [           //letters in layout, possible to click or press (keyboard)
       { letter: 'a', isClicked: false, isHit: false },
       { letter: 'b', isClicked: false, isHit: false },
       { letter: 'c', isClicked: false, isHit: false },
@@ -39,8 +39,8 @@ class App extends Component {
       { letter: 'x', isClicked: false, isHit: false },
       { letter: 'z', isClicked: false, isHit: false },
     ],
-    timeToNextLetter: 5,                              //if time === 0 => random letter is clicked 
-    mistakesLeft: 6,                                  // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
+    timeToNextLetter: 5,        //if time === 0 => random letter is clicked 
+    mistakesLeft: 7,            // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
   }
 
   startTimeToNextLetterHandler = () => {
@@ -68,6 +68,7 @@ class App extends Component {
   }
 
   clickOrPressKeyLetterHandler = (e, key) => {
+    if (this.state.timeToNextLetter === 0) return;
     const { lettersToClick, phraseToGuess, } = this.state
     const clickedLetter = e.target.textContent
     let pressedOrClickedLetter;
@@ -88,6 +89,7 @@ class App extends Component {
     clearInterval(this.ID)
     this.setState({ phraseToGuess, lettersToClick, timeToNextLetter: 5 });
     this.startTimeToNextLetterHandler();
+
   }
 
   //autoclick letter
@@ -96,6 +98,10 @@ class App extends Component {
     if (prevState.timeToNextLetter !== this.state.timeToNextLetter) {
       const { phraseToGuess } = this.state
       const lettersToClick = prevState.lettersToClick;
+
+      if (phraseToGuess.filter(phrase => !phrase.isLetterShowed).length === 0) return; // if the phrase is guessed
+      if (lettersToClick.filter(letterObj => !letterObj.isClicked).length === 0) return; // if all letters are clicked
+
       const filteredLetters = lettersToClick.filter(letterToClick => !letterToClick.isClicked);
       const random = Math.floor(Math.random() * filteredLetters.length);
       //this is random clicked letter
@@ -119,7 +125,7 @@ class App extends Component {
 
     // this.startTimeToNextLetterHandler()
     document.addEventListener('keypress', (e) => this.clickOrPressKeyLetterHandler(e, e.key));
-    const fetchedPhrase = 'Great Wall of China';
+    const fetchedPhrase = 'The Eiffel Tower';
     const { phraseToGuess } = this.state;
     [...fetchedPhrase].map((phrase, index) => {
       return phraseToGuess.push({
@@ -139,6 +145,7 @@ class App extends Component {
   }
 
   render() {
+    console.log((this.state.phraseToGuess.filter(phrase => !phrase.isLetterShowed)))
     const {
       phraseToGuess,
       lettersToClick,
