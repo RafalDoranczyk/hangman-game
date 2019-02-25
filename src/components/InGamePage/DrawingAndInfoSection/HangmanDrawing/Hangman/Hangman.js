@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 //HangmanDrawingParts
 const StylesForAllParts = styled.div`
@@ -145,5 +146,9 @@ const Hangman = ({ mistakesLeft }) => (
         />
     </>
 );
+
+Hangman.propTypes = {
+    mistakesLeft: PropTypes.number,
+}
 
 export default Hangman;

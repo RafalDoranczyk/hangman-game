@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Hangman from './Hangman/Hangman';
 
 const HangmanSectionWrapper = styled.div`
@@ -11,12 +12,17 @@ const HangmanSectionWrapper = styled.div`
 `
 
 
-const hangmanDrawingSection = ({ mistakesLeft }) => (
+const HangmanDrawingSection = ({ mistakesLeft }) => (
     <HangmanSectionWrapper>
         <Hangman
             mistakesLeft={mistakesLeft}
         />
 
     </HangmanSectionWrapper>
-)
-export default hangmanDrawingSection;
+);
+
+HangmanDrawingSection.propTypes = {
+    mistakesLeft: PropTypes.number.isRequired,
+}
+
+export default HangmanDrawingSection;

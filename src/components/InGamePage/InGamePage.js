@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import DrawingAndInfoSection from './DrawingAndInfoSection/DrawingAndInfoSection';
 import PhraseToGuessSection from './PhraseToGuessSection/PhraseToGuessSection';
 import LettersToClickSection from './LettersToClickSection/LettersToClickSection';
@@ -22,7 +23,7 @@ const InGamePageWrapper = styled.div`
 
 
 
-const inGamePage = ({ mistakesLeft, timeToNextLetter, phraseToGuess, questionInfo, lettersToClick, clickLetter, isGameInProgress, isGameEnded }) => (
+const InGamePage = ({ mistakesLeft, timeToNextLetter, phraseToGuess, questionInfo, lettersToClick, clickLetter, isGameInProgress, isGameEnded }) => (
     <InGamePageWrapper
         isGameEnded={isGameEnded}
         isGameInProgress={isGameInProgress}>
@@ -38,6 +39,18 @@ const inGamePage = ({ mistakesLeft, timeToNextLetter, phraseToGuess, questionInf
             lettersToClick={lettersToClick}
             clickLetter={clickLetter} />
     </InGamePageWrapper>
-)
+);
 
-export default inGamePage;
+InGamePage.propTypes = {
+    mistakesLeft: PropTypes.number.isRequired,
+    timeToNextLetter: PropTypes.number.isRequired,
+    phraseToGuess: PropTypes.arrayOf(PropTypes.object).isRequired,
+    questionInfo: PropTypes.object.isRequired,
+    lettersToClick: PropTypes.arrayOf(PropTypes.object).isRequired,
+    clickLetter: PropTypes.func.isRequired,
+    isGameInProgress: PropTypes.bool.isRequired,
+    isGameEnded: PropTypes.bool.isRequired,
+}
+
+
+export default InGamePage;

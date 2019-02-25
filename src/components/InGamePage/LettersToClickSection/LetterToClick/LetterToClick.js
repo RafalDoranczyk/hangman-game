@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Letter = styled.span`
     flex-basis: 10%;
@@ -9,8 +10,8 @@ const Letter = styled.span`
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 15px;
-    font-weight: 400;
+    border-radius: 5px;
+    font-weight: 700;
     transform: ${({ isClicked }) => isClicked && 'translateY(.3rem)'};  
     box-shadow:${({ isClicked, isHit, theme }) =>
         isHit ? `0 .5rem 0 0 ${theme.colors.green}`
@@ -22,8 +23,7 @@ const Letter = styled.span`
     cursor: pointer;
 `
 
-const letterToClick = ({ letter, clickLetter, isHit, isClicked }) => (
-
+const LetterToClick = ({ letter, clickLetter, isHit, isClicked }) => (
     <Letter
         isClicked={isClicked}
         onClick={clickLetter}
@@ -31,6 +31,13 @@ const letterToClick = ({ letter, clickLetter, isHit, isClicked }) => (
     >
         {letter}
     </Letter>
-)
+);
 
-export default letterToClick;
+LetterToClick.propTypes = {
+    letter: PropTypes.string.isRequired,
+    clickLetter: PropTypes.func.isRequired,
+    isHit: PropTypes.bool.isRequired,
+    isClicked: PropTypes.bool.isRequired,
+}
+
+export default LetterToClick;

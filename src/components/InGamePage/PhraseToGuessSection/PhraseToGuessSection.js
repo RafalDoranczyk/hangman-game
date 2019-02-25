@@ -1,6 +1,7 @@
 import React from 'react';
-import Letters from './Letters/Letters';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import Letters from './Letters/Letters';
 
 const PhraseToGuessWrapper = styled.div`
     flex-basis: 25%;
@@ -19,6 +20,11 @@ const PhraseToGuess = ({ phraseToGuess }) => (
 
     </PhraseToGuessWrapper>
 
-)
+);
+
+PhraseToGuess.propTypes = {
+    phraseToGuess: PropTypes.arrayOf(PropTypes.object).isRequired,
+
+}
 
 export default PhraseToGuess;

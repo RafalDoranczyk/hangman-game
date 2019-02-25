@@ -12,11 +12,11 @@ transform: ${({ isGameEnded, isGameInProgress }) => isGameInProgress ? 'translat
 transition: .2s .4s linear all;
 `
 
-const endGamePage = ({ isGameEnded, isGameInProgress }) => (
+const EndGamePage = ({ isGameEnded, isGameInProgress }) => (
     <EndGameWrapper
         isGameInProgress={isGameInProgress}
         isGameEnded={isGameEnded}>
     </EndGameWrapper>
 );
 
-export default endGamePage;
+export default EndGamePage;

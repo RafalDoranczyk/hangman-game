@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Hangman from '../InGamePage/DrawingAndInfoSection/HangmanDrawing/Hangman/Hangman';
 import StartGameButton from './Buttons/StartGameButton';
 import GameInfoButton from './Buttons/GameInfoButton';
@@ -25,7 +26,7 @@ background-color: ${({ theme }) => theme.colors.deep};
 `
 
 
-const startPage = ({ isGameInProgress, startGame, isGameEnded, phraseToGuess, children }) => {
+const StartPage = ({ isGameInProgress, startGame, isGameEnded, phraseToGuess, children }) => {
     return (
         <StartPageWrapper
             isGameEnded={isGameEnded}
@@ -45,7 +46,12 @@ const startPage = ({ isGameInProgress, startGame, isGameEnded, phraseToGuess, ch
     )
 }
 
+StartPage.propTypes = {
+    isGameInProgress: PropTypes.bool.isRequired,
+    startGame: PropTypes.func.isRequired,
+    isGameEnded: PropTypes.bool.isRequired,
+    phraseToGuess: PropTypes.arrayOf(PropTypes.object).isRequired,
+}
 
 
-
-export default startPage;
+export default StartPage;

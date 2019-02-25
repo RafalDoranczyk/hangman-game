@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const LetterWrapper = styled.span`
     display: block;
@@ -10,13 +11,15 @@ const LetterWrapper = styled.span`
     color: ${({ theme }) => theme.colors.gray};
 `
 
-const letter = ({ letterObj }) => (
-
+const Letter = ({ letterObj }) => (
     <LetterWrapper>
         {letterObj.isLetterShowed ? letterObj.letter : "__"}
     </LetterWrapper>
-
 );
 
+Letter.propTypes = {
+    letterObj: PropTypes.object.isRequired,
+}
 
-export default letter;
+
+export default Letter;

@@ -1,7 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import HangmanDrawing from './HangmanDrawing/HangmanDrawing';
 import GameInfo from './GameInfo/GameInfo';
-import styled from 'styled-components';
+
 
 
 const DrawingAndInfoSectionWrapper = styled.div`
@@ -33,6 +35,12 @@ const DrawingAndInfoSection = ({ timeToNextLetter, mistakesLeft, questionInfo })
             timeToNextLetter={timeToNextLetter}
         />
     </DrawingAndInfoSectionWrapper>
-)
+);
 
+
+DrawingAndInfoSection.propTypes = {
+    timeToNextLetter: PropTypes.number.isRequired,
+    mistakesLeft: PropTypes.number.isRequired,
+    questionInfo: PropTypes.object.isRequired,
+}
 export default DrawingAndInfoSection;

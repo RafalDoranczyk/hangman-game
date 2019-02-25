@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types'
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { theme } from '../../theme/theme';
 
@@ -24,7 +25,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Montserrat', sans-serif;
 }
 `
-const Layout = styled.div`
+const LayoutWrapper = styled.div`
 position: absolute;
 top: 50%;
 left: 50%;
@@ -35,18 +36,23 @@ max-width: 1000px;
 transform: translate(-50%,-50%);
 `
 
-const layout = ({ isGameInProgress, children }) =>
+const Layout = ({ isGameInProgress, children }) =>
     (
         <ThemeProvider theme={theme}>
             <>
                 <GlobalStyle
                     isGameInProgress={isGameInProgress} />
-                <Layout>
+                <LayoutWrapper>
                     {children}
-                </Layout>
+                </LayoutWrapper>
             </>
         </ThemeProvider>
 
     )
 
-export default layout;
+
+Layout.propTypes = {
+    isGameInProgress: PropTypes.bool.isRequired,
+}
+
+export default Layout;

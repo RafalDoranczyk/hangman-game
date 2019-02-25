@@ -1,6 +1,7 @@
 import React from 'react';
-import Letter from './Letter/Letter';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import Letter from './Letter/Letter';
 
 const LettersWrapper = styled.div`
 
@@ -15,15 +16,13 @@ const LettersWrapper = styled.div`
 `
 
 const BreakLine = styled.div`
-
     flex-basis: 100%;
     height: 1%;
-
 `
 
 
 
-const letters = ({ phraseToGuess }) => {
+const Letters = ({ phraseToGuess }) => {
 
     const letters = phraseToGuess.map(letterObj => {
         let letters;
@@ -43,6 +42,10 @@ const letters = ({ phraseToGuess }) => {
 
         <LettersWrapper>{letters}</LettersWrapper>
     );
+};
+
+Letters.propTypes = {
+    phraseToGuess: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
-export default letters;
+export default Letters;

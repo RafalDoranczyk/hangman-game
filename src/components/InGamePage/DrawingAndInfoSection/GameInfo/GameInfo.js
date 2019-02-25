@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const GameInfoWrapper = styled.div`
     flex-basis: 50%;
@@ -98,7 +99,15 @@ const GameInfoSection = ({ timeToNextLetter, mistakesLeft, questionInfo }) => {
             </Info>
         </GameInfoWrapper>
     )
+};
+
+GameInfoSection.propTypes = {
+    timeToNextLetter: PropTypes.number.isRequired,
+    mistakesLeft: PropTypes.number.isRequired,
+    questionInfo: PropTypes.object.isRequired,
 }
+
+
 
 
 export default GameInfoSection;

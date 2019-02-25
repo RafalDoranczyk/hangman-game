@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 export const ButtonStyle = styled.button`
 position: absolute;
@@ -33,6 +34,10 @@ const StartGameButton = ({ startGame, phraseToGuess }) => {
 }
 
 
+StartGameButton.propTypes = {
+    startGame: PropTypes.func.isRequired,
+    phraseToGuess: PropTypes.arrayOf(PropTypes.object).isRequired,
 
+}
 
 export default StartGameButton;
