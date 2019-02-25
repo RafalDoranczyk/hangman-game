@@ -1,38 +1,52 @@
 import React from 'react';
 import styled from 'styled-components';
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import { theme } from '../../theme/theme';
 
 const GlobalStyle = createGlobalStyle`
+
 *{
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-font-weight: normal;
-color:white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-weight: normal;
+ 
 }
+* ::after, * ::before{
+    position: absolute;
+    content: '';
+}
+
+
 :root{
+    color:${({ theme }) => theme.colors.black};
     font-size: 10px;
     font-family: 'Montserrat', sans-serif;
 }
-
 `
-
 const Layout = styled.div`
-background-color: #444;
-height: 100vh;
+position: absolute;
+top: 50%;
+left: 50%;
+height: 100%;
+width: 100%;
 overflow: hidden;
-display: flex;
-flex-flow: column wrap;
-justify-content: space-evenly;
-align-items: center;
+max-width: 1000px;
+transform: translate(-50%,-50%);
 `
 
-const layout = (props) =>
+const layout = ({ isGameInProgress, children }) =>
     (
-        <>
-            <GlobalStyle />
-            <Layout>{props.children}</Layout>
-        </>
+        <ThemeProvider theme={theme}>
+            <>
+                <GlobalStyle
+                    isGameInProgress={isGameInProgress} />
+                <Layout>
+                    {children}
+                </Layout>
+            </>
+        </ThemeProvider>
+
     )
 
 export default layout;

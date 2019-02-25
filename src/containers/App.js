@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import Layout from '../components/Layout/Layout';
-import DrawingAndInfoSectionWrapper from '../components/DrawingAndInfoSection/DrawingAndInfoSection';
-import PhraseToGuessSection from '../components/PhraseToGuessSection/PhraseToGuessSection';
-import LettersToClickSection from '../components/LettersToClickSection/LettersToClickSection';
+import StartPage from '../components/StartPage/StartPage';
+import InGamePage from '../components/InGamePage/InGamePage';
+import EndGamePage from '../components/EndGamePage/EndGamePage';
+import axios from 'axios'
+const TIME_TO_NEXT_LETTER = 7;
 
-
-const API = ' https://hangman-239ba.firebaseio.com/.json';
+const API = 'https://hangman-239ba.firebaseio.com/.json'
 
 class App extends Component {
 
@@ -39,11 +40,19 @@ class App extends Component {
       { letter: 'x', isClicked: false, isHit: false },
       { letter: 'z', isClicked: false, isHit: false },
     ],
-    timeToNextLetter: 5,        //if time === 0 => random letter is clicked 
+    questionInfo: {},
+    timeToNextLetter: 7,        //if time === 0 => random letter is clicked 
     mistakesLeft: 7,            // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
+    isGameInProgress: false,
+    isGameEnded: false,
+  }
+
+  startGameHandler = () => {
+    this.setState({ isGameInProgress: true });
   }
 
   startTimeToNextLetterHandler = () => {
+    if (this.state.isGameEnded) return;
     this.ID = setInterval(() => {
       this.setState({ timeToNextLetter: this.state.timeToNextLetter - 1 })
     }, 1000);
@@ -68,7 +77,10 @@ class App extends Component {
   }
 
   clickOrPressKeyLetterHandler = (e, key) => {
-    if (this.state.timeToNextLetter === 0) return;
+    if (!this.state.isGameInProgress) return;
+    //Do only if game is not ended
+    if (this.state.isGameEnded || this.state.timeToNextLetter === 0) return;
+
     const { lettersToClick, phraseToGuess, } = this.state
     const clickedLetter = e.target.textContent
     let pressedOrClickedLetter;
@@ -87,15 +99,62 @@ class App extends Component {
     const selectedLetterObj = lettersToClick[index]
     this.isSelectedLetterInPhraseHandler(selectedLetterObj)
     clearInterval(this.ID)
-    this.setState({ phraseToGuess, lettersToClick, timeToNextLetter: 5 });
     this.startTimeToNextLetterHandler();
-
+    this.setState({ phraseToGuess, lettersToClick, timeToNextLetter: TIME_TO_NEXT_LETTER });
   }
+
+  fetchDataHandler = () => {
+
+    axios.get(API)
+      .then(response => response.statusText ? response : Error)
+      .then(response => {
+        const randomForCategory = Math.floor(Math.random() * Object.keys(response.data).length)
+        const randomCategory = Object.keys(response.data)[randomForCategory];
+        const questionsInCategory = Object.entries(response.data)[randomForCategory][1]
+        const randomForQuestion = Math.floor(Math.random() * Object.entries(questionsInCategory).length)
+        const randomQuestion = Object.entries(questionsInCategory)[randomForQuestion][0];
+        const hintForThisQuestion = Object.entries(questionsInCategory)[randomForQuestion][1];
+
+        const { phraseToGuess } = this.state;
+
+
+        [...randomQuestion].map((phrase, index) => {
+          return phraseToGuess.push({
+            letter: phrase.toUpperCase(),
+            id: index,
+            isLetterShowed: false,
+          })
+        })
+        phraseToGuess.filter(letterObj => (
+          letterObj.letter === " " || letterObj.letter === "," || letterObj.letter === "-" ? letterObj.isLetterShowed = true : letterObj.isLetterShowed = false)
+        )
+        this.setState({
+          phraseToGuess, questionInfo: {
+            category: randomCategory,
+            hint: hintForThisQuestion,
+          }
+        })
+      }
+      )
+  }
+
 
   //autoclick letter
   componentDidUpdate(prevProps, prevState) {
+    //END GAME HANDLER
+    if (this.state.isGameEnded) return;
+
+    const allLettersAreShowed = this.state.phraseToGuess.filter(phrase => !phrase.isLetterShowed).length === 0;
+    const noMistakesLeft = this.state.mistakesLeft === 0 && true;
+    if (allLettersAreShowed || noMistakesLeft) {
+      clearInterval(this.ID)
+      clearTimeout(this.TimeoutID)
+      this.setState({ isGameEnded: true, isGameInProgress: false })
+
+    }
 
     if (prevState.timeToNextLetter !== this.state.timeToNextLetter) {
+
       const { phraseToGuess } = this.state
       const lettersToClick = prevState.lettersToClick;
 
@@ -106,13 +165,12 @@ class App extends Component {
       const random = Math.floor(Math.random() * filteredLetters.length);
       //this is random clicked letter
       const autoClicked = filteredLetters[random];
-
       if (this.state.timeToNextLetter === 0) {
         this.isSelectedLetterInPhraseHandler(autoClicked);
         this.setState({ phraseToGuess, lettersToClick });
         clearInterval(this.ID);
-        setTimeout(() => {
-          this.setState({ timeToNextLetter: 5 })
+        this.TimeoutID = setTimeout(() => {
+          this.setState({ timeToNextLetter: TIME_TO_NEXT_LETTER })
           this.startTimeToNextLetterHandler();
         }, 1000)
       }
@@ -122,51 +180,50 @@ class App extends Component {
   }
 
   componentDidMount() {
-
-    // this.startTimeToNextLetterHandler()
-    document.addEventListener('keypress', (e) => this.clickOrPressKeyLetterHandler(e, e.key));
-    const fetchedPhrase = 'The Eiffel Tower';
-    const { phraseToGuess } = this.state;
-    [...fetchedPhrase].map((phrase, index) => {
-      return phraseToGuess.push({
-        letter: phrase.toUpperCase(),
-        id: index,
-        isLetterShowed: false,
-      })
-    })
-    phraseToGuess.filter(letterObj => (
-      letterObj.letter === " " || letterObj.letter === "," || letterObj.letter === "-" ? letterObj.isLetterShowed = true : letterObj.isLetterShowed = false)
-    )
-    this.setState({ phraseToGuess })
+    document.addEventListener('keydown', (e) => this.clickOrPressKeyLetterHandler(e, e.key));
+    this.fetchDataHandler();
   }
 
+
+
   componentWillUnmount() {
-    document.removeEventListener('keypress', this.clickOrPressKeyLetterHandler)
+
+    document.removeEventListener('keydown', this.clickOrPressKeyLetterHandler())
   }
 
   render() {
-    console.log((this.state.phraseToGuess.filter(phrase => !phrase.isLetterShowed)))
     const {
       phraseToGuess,
       lettersToClick,
       timeToNextLetter,
-      mistakesLeft
+      mistakesLeft,
+      isGameInProgress,
+      isGameEnded,
+      questionInfo,
     } = this.state
 
     return (
 
-      <Layout>
-        <DrawingAndInfoSectionWrapper
-          mistakesLeft={mistakesLeft}
-          timeToNextLetter={timeToNextLetter}
-        />
-        <PhraseToGuessSection
+      <Layout
+        isGameInProgress={isGameInProgress}>
+        <StartPage
           phraseToGuess={phraseToGuess}
-        />
-        <LettersToClickSection
+          isGameEnded={isGameEnded}
+          isGameInProgress={isGameInProgress}
+          startGame={this.startGameHandler} />
+        <InGamePage
+          isGameEnded={isGameEnded}
+          isGameInProgress={isGameInProgress}
+          questionInfo={questionInfo}
+          phraseToGuess={phraseToGuess}
           lettersToClick={lettersToClick}
+          timeToNextLetter={timeToNextLetter}
+          mistakesLeft={mistakesLeft}
           clickLetter={this.clickOrPressKeyLetterHandler}
         />
+        <EndGamePage
+          isGameInProgress={isGameInProgress}
+          isGameEnded={isGameEnded} />
       </Layout>
     );
   }
