@@ -1,11 +1,11 @@
 {
-  "main.js": "/hangman-game/static/js/main.870a283e.chunk.js",
-  "main.js.map": "/hangman-game/static/js/main.870a283e.chunk.js.map",
+  "main.js": "/hangman-game/static/js/main.4b978c31.chunk.js",
+  "main.js.map": "/hangman-game/static/js/main.4b978c31.chunk.js.map",
   "runtime~main.js": "/hangman-game/static/js/runtime~main.ffea54f9.js",
   "runtime~main.js.map": "/hangman-game/static/js/runtime~main.ffea54f9.js.map",
   "static/js/2.bc412d51.chunk.js": "/hangman-game/static/js/2.bc412d51.chunk.js",
   "static/js/2.bc412d51.chunk.js.map": "/hangman-game/static/js/2.bc412d51.chunk.js.map",
   "index.html": "/hangman-game/index.html",
-  "precache-manifest.527f19e878af3e10e515bc121ff6bfff.js": "/hangman-game/precache-manifest.527f19e878af3e10e515bc121ff6bfff.js",
+  "precache-manifest.a31113425c67bfb4305d52b2418d2f7e.js": "/hangman-game/precache-manifest.a31113425c67bfb4305d52b2418d2f7e.js",
   "service-worker.js": "/hangman-game/service-worker.js"
 }
