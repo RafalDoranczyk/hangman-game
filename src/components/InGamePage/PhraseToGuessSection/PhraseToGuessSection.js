@@ -9,14 +9,22 @@ const PhraseToGuessWrapper = styled.div`
     display: flex;
     flex-flow: column wrap;
     justify-content: space-around;
+
     background-color: ${({ theme }) => theme.colors.black};
+    @media (orientation: landscape){
+        flex-basis: 40%;
+        width: 40%;
+    }
+
 `
 
-const PhraseToGuess = ({ phraseToGuess }) => (
+const PhraseToGuess = ({ phraseToGuess, isGameWon }) => (
 
     <PhraseToGuessWrapper>
 
-        <Letters phraseToGuess={phraseToGuess} />
+        <Letters
+            isGameWon={isGameWon}
+            phraseToGuess={phraseToGuess} />
 
     </PhraseToGuessWrapper>
 

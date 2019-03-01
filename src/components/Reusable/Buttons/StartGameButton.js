@@ -7,8 +7,8 @@ position: absolute;
 top: 60%;
 left: 50%;
 transform:translateX(-50%);
-height: 50px;
-width: 150px;
+height: 3em;
+width: 8em;
 border-radius: 50px;
 border: none;
 font-size: 1.1em;
@@ -17,18 +17,20 @@ background-color: ${({ theme, disabled }) => disabled ? theme.colors.black : the
 color: ${({ theme }) => theme.colors.gray};
 cursor: pointer;
 transition: .6s linear all;
+box-shadow: 0 0 5px 5px ${({ theme }) => theme.colors.black} ;
+
+
 `
 
+const StartGameButton = ({ startGame, phraseToGuess, children }) => {
 
-const StartGameButton = ({ startGame, phraseToGuess }) => {
 
-    const text = phraseToGuess.length > 0 ? 'Start Game' : 'Loading...'
 
     return (
         <ButtonStyle
             disabled={phraseToGuess.length > 0 ? false : true}
             onClick={startGame}>
-            {text}
+            {children}
         </ButtonStyle>
     )
 }

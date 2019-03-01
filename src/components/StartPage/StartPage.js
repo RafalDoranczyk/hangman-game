@@ -1,9 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import PropTypes from 'prop-types';
-import Hangman from '../InGamePage/DrawingAndInfoSection/HangmanDrawing/Hangman/Hangman';
-import StartGameButton from './Buttons/StartGameButton';
-import GameInfoButton from './Buttons/GameInfoButton';
+import Hangman from '../Reusable/Hangman/Hangman';
+import { ButtonStyle } from '../Reusable/Buttons/StartGameButton';
+
+
+const ShadowMove = props => keyframes`
+0%{
+    box-shadow: 0 0 1px 1px${props.theme.colors.red};
+}
+100%{
+    box-shadow: 0 0 8px 8px  ${props.theme.colors.deepRed};
+}
+`
 
 const StartPageWrapper = styled.div`
 height: 100%;
@@ -12,36 +21,54 @@ opacity: ${({ isGameInProgress, isGameEnded }) => isGameInProgress || isGameEnde
 display: flex;
 flex-flow: row wrap;
 transition: .4s linear all;
-*{
-    opacity:1;
+font-size: 1.6rem;
+
+@media (orientation: landscape) and (min-width: ${({ theme }) => theme.device.iPad}) {
+    font-size: 3rem;
 }
-font-size: 15px;
+@media (orientation: portrait) and (min-width: ${({ theme }) => theme.device.iPad}) {
+    font-size: 3rem;
+}
+
 `
 
-const HangmanWapper = styled.div`
+const HangmanWrapper = styled.div`
+position: relative;
 height: 100%;
 width: 100%;
 background-color: ${({ theme }) => theme.colors.deep};
+*, *::after, *::before{
+    opacity:1;
+    position: absolute;
+    animation: ${ShadowMove} 1s linear infinite alternate;
+}
+`
+
+const StartGameButtonStyle = styled(ButtonStyle)`
+@media(orientation: landscape){
+    top: 50%;
+    left: 70%;
+    transform: translate(-50%,-50%);
+}
 
 `
 
 
 const StartPage = ({ isGameInProgress, startGame, isGameEnded, phraseToGuess, children }) => {
+    const text = phraseToGuess.length > 0 ? 'Start Game' : 'Loading...'
+
     return (
         <StartPageWrapper
             isGameEnded={isGameEnded}
             isGameInProgress={isGameInProgress}>
-            <HangmanWapper>
+            <HangmanWrapper>
                 <Hangman />
-            </HangmanWapper>
-            <StartGameButton
+            </HangmanWrapper>
+            <StartGameButtonStyle
                 phraseToGuess={phraseToGuess}
-                startGame={startGame}
-            >{children}
-            </StartGameButton>
-            <GameInfoButton>
-                {children}
-            </GameInfoButton>
+                onClick={startGame}
+            >{text}
+            </StartGameButtonStyle>
         </StartPageWrapper>
     )
 }

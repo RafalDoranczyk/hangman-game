@@ -4,15 +4,22 @@ import PropTypes from 'prop-types';
 
 const LetterWrapper = styled.span`
     display: block;
-    height: 1.5rem;
-    width: 1.5rem;
-    font-size: 2rem;
-    margin-left: 1.4rem;
-    color: ${({ theme }) => theme.colors.gray};
+    height: .7em;
+    width: .7em;
+    font-size: 1.6em;
+    margin: 0 .8em;
+    color: ${({ theme, isGameWon }) => isGameWon ? theme.colors.winGamePhrase : theme.colors.gray};
+
+@media (orientation: landscape){
+    margin: 0 .4em;
+}
+
+
 `
 
-const Letter = ({ letterObj }) => (
-    <LetterWrapper>
+const Letter = ({ letterObj, isGameWon }) => (
+    <LetterWrapper
+        isGameWon={isGameWon}>
         {letterObj.isLetterShowed ? letterObj.letter : "__"}
     </LetterWrapper>
 );

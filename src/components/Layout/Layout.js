@@ -5,7 +5,9 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { theme } from '../../theme/theme';
 
 const GlobalStyle = createGlobalStyle`
-
+body{
+    background-color: ${({ theme }) => theme.colors.deep};
+}
 *{
     margin: 0;
     padding: 0;
@@ -31,9 +33,14 @@ top: 50%;
 left: 50%;
 height: 100%;
 width: 100%;
-overflow: hidden;
-max-width: 1000px;
 transform: translate(-50%,-50%);
+overflow: hidden;
+
+@media (min-width: ${props => props.theme.device.iPad}){
+    height: 70%;
+    width: 70%;
+}
+
 `
 
 const Layout = ({ isGameInProgress, children }) =>

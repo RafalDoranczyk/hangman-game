@@ -4,16 +4,31 @@ import PropTypes from 'prop-types';
 import LetterToClick from './LetterToClick/LetterToClick';
 
 const LettersWrapper = styled.div`
-    flex-basis: 40%;
+    flex-basis: 35%;
     width: 100%;
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     align-items: center;
     background-color: ${({ theme }) => theme.colors.deep};
+    font-size: 1.5rem;
+    @media (orientation: landscape){
+        flex-grow: 1;
+        width: 40%;
+    }
+
+    @media (orientation: portrait) and (min-width: ${({ theme }) => theme.device.iPad}) {
+    font-size: 2rem;
+}
+
+    @media (orientation: landscape) and (min-width: ${({ theme }) => theme.device.iPad}) {
+    font-size: 1.6rem;
+}
+
+
 `
 
-const LettersToClick = ({ lettersToClick, clickLetter }) => {
+const LettersToClick = ({ lettersToClick, clickLetter, isGameEnded }) => {
 
     const letters = lettersToClick.map(letterToClick => (
         <LetterToClick
@@ -21,11 +36,13 @@ const LettersToClick = ({ lettersToClick, clickLetter }) => {
             isClicked={letterToClick.isClicked}
             key={letterToClick.letter}
             isHit={letterToClick.isHit}
-            letter={letterToClick.letter.toUpperCase()} />
+            letter={letterToClick.letter.toUpperCase()}
+            isGameEnded={isGameEnded} />
     ))
 
     return (
-        <LettersWrapper>
+        <LettersWrapper
+            isGameEnded={isGameEnded}>
             {letters}
         </LettersWrapper>
     );

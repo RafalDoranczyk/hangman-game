@@ -9,11 +9,14 @@ const GameInfoWrapper = styled.div`
     flex-flow: row nowrap;
     justify-content: flex-end;
     text-align: center;
-    font-size: 1.4rem;
     color: ${({ theme }) => theme.colors.gray};
+    font-size: 1.4em;
+
 span{
     display: block;
 }
+
+
 
 `
 const Info = styled.div`
@@ -22,22 +25,27 @@ const Info = styled.div`
     flex-flow: row wrap;
     justify-content: space-around;
     align-items: flex-end;
+
+    @media(orientation:landscape){
+        flex-basis: 100%;
+        align-items: center;
+    }
 `
 
 const Category = styled.p`
     flex-basis: 100%;
-    height: 25%;
+    height: 20%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-around;
+    justify-content: space-evenly;
     font-weight: 700;
 `
 const Hint = styled.p`
-    flex-basis: 100%;
+    flex-basis: 95%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-around;
-    height: 40%;
+    justify-content: space-evenly;
+    height: 35%;
     font-weight: 700;
 `
 
@@ -47,21 +55,27 @@ const MistakesLeft = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
     margin-bottom: .1rem;
     background-color: ${({ theme }) => theme.colors.deep};
     border-radius: 100px;
     color: ${({ theme }) => theme.colors.gray};
     position: relative;
+
+    @media (orientation: landscape){
+       margin-right: 40%;
+       height: 10%;
+
+    }
     &::before{
         top: 50%;
         transform: translate(-90%, -50%);
         left: 0;
-        width: 5rem;
+        width: 6rem;
         height: 1rem;
         border-radius: 20%;
         background-color: ${({ theme }) => theme.colors.deep};
     }
+    
 `
 
 
@@ -72,7 +86,6 @@ const TimeToNextLetterWrapper = styled.div`
     justify-content: center;
     align-items: center;
     margin-bottom: .1rem;
-    font-size: 2rem;
     background-color: ${({ theme }) => theme.colors.black};
     border-radius: 100px;
     color: ${({ theme }) => theme.colors.gray};
@@ -82,18 +95,33 @@ const TimeToNextLetterWrapper = styled.div`
         transform: translate(-50%, -10%);
         left: 50%;
         width: 1rem;
-        height: 3rem;
+        height: 6rem;
         border-radius: 20%;
         background-color:${({ theme }) => theme.colors.black};
     }
+
+    @media (orientation: landscape){
+       order: -1;
+       height: 10%;
+       margin-left: 40%;
+       &::before{
+           transform: translate(-10%,-50%);
+           top: 50%;
+           left: 100%;
+           width: 6rem;
+           height: 1rem;
+       }
+    }
+
+   
 `
 
-const GameInfoSection = ({ timeToNextLetter, mistakesLeft, questionInfo }) => {
+const GameInfoSection = ({ timeToNextLetter, mistakesLeft, phraseInfo }) => {
     return (
         <GameInfoWrapper>
             <Info>
-                <Category>Category <span>{questionInfo.category}</span> </Category>
-                <Hint>Hint <span>{questionInfo.hint}</span></Hint>
+                <Category>Category <span>{phraseInfo.category}</span> </Category>
+                <Hint>Hint <span>{phraseInfo.hint}</span></Hint>
                 <MistakesLeft>{mistakesLeft}</MistakesLeft>
                 <TimeToNextLetterWrapper>{timeToNextLetter} </TimeToNextLetterWrapper>
             </Info>
@@ -104,7 +132,7 @@ const GameInfoSection = ({ timeToNextLetter, mistakesLeft, questionInfo }) => {
 GameInfoSection.propTypes = {
     timeToNextLetter: PropTypes.number.isRequired,
     mistakesLeft: PropTypes.number.isRequired,
-    questionInfo: PropTypes.object.isRequired,
+    phraseInfo: PropTypes.object.isRequired,
 }
 
 

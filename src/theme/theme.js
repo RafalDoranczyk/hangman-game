@@ -1,5 +1,8 @@
-export const theme = {
+const size = {
+    iPad: '767px'
+}
 
+export const theme = {
     colors: {
         white: '#fff',
         black: '#000',
@@ -7,6 +10,10 @@ export const theme = {
         deep: '#140A25',
         green: '#69a982',
         red: '#6f2232',
-        deepRed: '#400D2A'
-    }
+        deepRed: '#400D2A',
+        winGamePhrase: '#fed123',
+    },
+    device: {
+        iPad: size.iPad
+    },
 }

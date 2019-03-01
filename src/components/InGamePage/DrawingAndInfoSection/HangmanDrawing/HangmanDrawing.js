@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import Hangman from './Hangman/Hangman';
+import Hangman from '../../../Reusable/Hangman/Hangman';
 
-const HangmanSectionWrapper = styled.div`
+const HangmanDrawingWrapper = styled.div`
     flex-grow: 1;
     position: relative;
     top: 0;
@@ -11,14 +11,38 @@ const HangmanSectionWrapper = styled.div`
     background-color: ${({ theme }) => theme.colors.deep};
 `
 
+const HangmanWrapper = styled.div`
+position: relative;
+height: 100%;
+width:100%;
+font-size: 1rem;
+z-index: 1;
+
+@media (orientation:landscape) and (min-width: ${props => props.theme.device.iPad}){
+    font-size: 1.7rem;
+}
+@media (orientation:portrait) and (min-width: ${props => props.theme.device.iPad}){
+    font-size: 1.7rem;
+}
+*{
+
+    position: absolute;
+}
+
+`
+
 
 const HangmanDrawingSection = ({ mistakesLeft }) => (
-    <HangmanSectionWrapper>
-        <Hangman
-            mistakesLeft={mistakesLeft}
-        />
+    <HangmanDrawingWrapper>
+        <HangmanWrapper>
+            <Hangman
+                mistakesLeft={mistakesLeft}
+            />
 
-    </HangmanSectionWrapper>
+        </HangmanWrapper>
+
+
+    </HangmanDrawingWrapper>
 );
 
 HangmanDrawingSection.propTypes = {
