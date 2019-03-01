@@ -18,9 +18,13 @@ const Letter = styled.span`
             : isClicked ? `0 .5rem  0 0 ${theme.colors.red}`
                 : `0 0 .1rem 0 ${theme.colors.gray}`};
     background-color: ${({ theme }) => theme.colors.black};
-    opacity: ${({ isClicked }) => isClicked ? '.2' : '1'};
+    opacity: ${({ isClicked }) => isClicked ? '.5' : '1'};
     color: ${({ theme }) => theme.colors.gray};
     cursor: pointer;
+
+    :hover{
+    background-color: ${({ theme, isClicked }) => !isClicked && theme.colors.deepRed}
+    }
 `
 
 const LetterToClick = ({ letter, clickLetter, isHit, isClicked, isGameEnded }) => (

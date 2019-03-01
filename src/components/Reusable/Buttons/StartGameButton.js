@@ -18,7 +18,9 @@ color: ${({ theme }) => theme.colors.gray};
 cursor: pointer;
 transition: .6s linear all;
 box-shadow: 0 0 5px 5px ${({ theme }) => theme.colors.black} ;
-
+:hover{
+    background-color: ${({ theme }) => theme.colors.red}
+    }
 
 `
 

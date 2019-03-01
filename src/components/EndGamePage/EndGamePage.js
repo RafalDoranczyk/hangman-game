@@ -35,7 +35,7 @@ h3{
 }
 p{
     width: 80%;
-    top: ${({ isGameWon }) => isGameWon ? '35%' : '40%'};
+    top: 35%;
     font-size: ${({ isGameWon }) => isGameWon ? '1.1em' : '1.8em'};
     font-weight: 500;
     letter-spacing: 2px;

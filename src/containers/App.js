@@ -57,7 +57,12 @@ class App extends Component {
     this.giveRandomPhraseHandler(allPhrasesFromApi)
     if (this.state.isGameEnded) {
       this.setState({
-        isGameWon: false, isGameEnded: false, isGameInProgress: true, mistakesLeft: 7, lettersToClick: [
+        isGameWon: false,
+        isGameEnded: false,
+        isGameInProgress: true,
+        mistakesLeft: 7,
+        timeToNextLetter: 7,
+        lettersToClick: [
           { letter: 'q', isClicked: false, isHit: false },
           { letter: 'w', isClicked: false, isHit: false },
           { letter: 'e', isClicked: false, isHit: false },
