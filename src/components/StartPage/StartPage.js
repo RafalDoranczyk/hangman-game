@@ -1,18 +1,11 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Hangman from '../Reusable/Hangman/Hangman';
 import { ButtonStyle } from '../Reusable/Buttons/StartGameButton';
 
 
-const ShadowMove = props => keyframes`
-0%{
-    box-shadow: 0 0 1px 1px${props.theme.colors.red};
-}
-100%{
-    box-shadow: 0 0 8px 8px  ${props.theme.colors.deepRed};
-}
-`
+
 
 const StartPageWrapper = styled.div`
 height: 100%;
@@ -40,7 +33,7 @@ background-color: ${({ theme }) => theme.colors.deep};
 *, *::after, *::before{
     opacity:1;
     position: absolute;
-    animation: ${ShadowMove} 1s linear infinite alternate;
+    box-shadow: 0 0 3px 3px ${({theme})=>theme.colors.red}
 }
 `
 

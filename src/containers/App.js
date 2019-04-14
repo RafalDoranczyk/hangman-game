@@ -3,7 +3,8 @@ import Layout from '../components/Layout/Layout';
 import StartPage from '../components/StartPage/StartPage';
 import InGamePage from '../components/InGamePage/InGamePage';
 import EndGamePage from '../components/EndGamePage/EndGamePage';
-import axios from 'axios'
+import axios from 'axios';
+
 const TIME_TO_NEXT_LETTER = 7;
 let allPhrasesFromApi = {};
 const API = 'https://hangman-239ba.firebaseio.com/.json'

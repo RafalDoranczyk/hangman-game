@@ -16,7 +16,7 @@ letter-spacing: 2px;
 background-color: ${({ theme, disabled }) => disabled ? theme.colors.black : theme.colors.deepRed};
 color: ${({ theme }) => theme.colors.gray};
 cursor: pointer;
-transition: .6s linear all;
+transition: .2s linear all;
 box-shadow: 0 0 5px 5px ${({ theme }) => theme.colors.black} ;
 :hover{
     background-color: ${({ theme }) => theme.colors.red}
