@@ -1,260 +1,282 @@
-import React, { Component } from 'react';
-import Layout from '../components/Layout/Layout';
-import StartPage from '../components/StartPage/StartPage';
-import InGamePage from '../components/InGamePage/InGamePage';
-import EndGamePage from '../components/EndGamePage/EndGamePage';
-import axios from 'axios';
+import React, { Component } from "react";
+import Layout from "../Layout/Layout";
+import StartPage from "../components/StartPage/StartPage";
+import InGamePage from "../components/InGamePage/InGamePage";
+import EndGamePage from "../components/EndGamePage/EndGamePage";
+import { withFirebase } from "../hoc/Firebase";
+const TIME_TO_NEXT_LETTER = 5;
+const INITIAL_LETTERS_TO_CLICK = [
+  { letter: "Q", isClicked: false, isHit: false },
+  { letter: "W", isClicked: false, isHit: false },
+  { letter: "E", isClicked: false, isHit: false },
+  { letter: "R", isClicked: false, isHit: false },
+  { letter: "T", isClicked: false, isHit: false },
+  { letter: "Y", isClicked: false, isHit: false },
+  { letter: "U", isClicked: false, isHit: false },
+  { letter: "I", isClicked: false, isHit: false },
+  { letter: "O", isClicked: false, isHit: false },
+  { letter: "P", isClicked: false, isHit: false },
+  { letter: "A", isClicked: false, isHit: false },
+  { letter: "S", isClicked: false, isHit: false },
+  { letter: "D", isClicked: false, isHit: false },
+  { letter: "F", isClicked: false, isHit: false },
+  { letter: "G", isClicked: false, isHit: false },
+  { letter: "H", isClicked: false, isHit: false },
+  { letter: "J", isClicked: false, isHit: false },
+  { letter: "K", isClicked: false, isHit: false },
+  { letter: "L", isClicked: false, isHit: false },
+  { letter: "Z", isClicked: false, isHit: false },
+  { letter: "X", isClicked: false, isHit: false },
+  { letter: "C", isClicked: false, isHit: false },
+  { letter: "V", isClicked: false, isHit: false },
+  { letter: "B", isClicked: false, isHit: false },
+  { letter: "N", isClicked: false, isHit: false },
+  { letter: "M", isClicked: false, isHit: false }
+];
 
-const TIME_TO_NEXT_LETTER = 7;
-let allPhrasesFromApi = {};
-const API = 'https://hangman-239ba.firebaseio.com/.json'
+const initialState = {
+  allPhrasesFromApi: [],
+  isGameInProgress: false,
+  isGameEnded: false,
+  isGameWon: false,
+  isLoading: false,
+  phraseToGuess: [],
+  phraseInfo: {
+    category: "",
+    hint: "",
+    titbit: ""
+  },
+  lettersToClick: INITIAL_LETTERS_TO_CLICK,
+  timeToNextLetter: TIME_TO_NEXT_LETTER, //if time === 0 => random letter is clicked
+  mistakesLeft: 7 // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
+};
 
 class App extends Component {
-
   state = {
-    phraseToGuess: [],          //phrase comes from API in componentDidMount
-    phraseInfo: {
-      category: '',
-      hint: '',
-      titbit: '',
-    },
-    lettersToClick: [           //letters in layout, possible to click or press (keyboard)
-      { letter: 'q', isClicked: false, isHit: false },
-      { letter: 'w', isClicked: false, isHit: false },
-      { letter: 'e', isClicked: false, isHit: false },
-      { letter: 'r', isClicked: false, isHit: false },
-      { letter: 't', isClicked: false, isHit: false },
-      { letter: 'y', isClicked: false, isHit: false },
-      { letter: 'u', isClicked: false, isHit: false },
-      { letter: 'i', isClicked: false, isHit: false },
-      { letter: 'o', isClicked: false, isHit: false },
-      { letter: 'p', isClicked: false, isHit: false },
-      { letter: 'a', isClicked: false, isHit: false },
-      { letter: 's', isClicked: false, isHit: false },
-      { letter: 'd', isClicked: false, isHit: false },
-      { letter: 'f', isClicked: false, isHit: false },
-      { letter: 'g', isClicked: false, isHit: false },
-      { letter: 'h', isClicked: false, isHit: false },
-      { letter: 'j', isClicked: false, isHit: false },
-      { letter: 'k', isClicked: false, isHit: false },
-      { letter: 'l', isClicked: false, isHit: false },
-      { letter: 'z', isClicked: false, isHit: false },
-      { letter: 'x', isClicked: false, isHit: false },
-      { letter: 'c', isClicked: false, isHit: false },
-      { letter: 'v', isClicked: false, isHit: false },
-      { letter: 'b', isClicked: false, isHit: false },
-      { letter: 'n', isClicked: false, isHit: false },
-      { letter: 'm', isClicked: false, isHit: false },
-    ],
-
-    timeToNextLetter: 7,        //if time === 0 => random letter is clicked 
-    mistakesLeft: 7,            // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
-    isGameInProgress: false,
-    isGameEnded: false,
-    isGameWon: false,
-  }
-
-  startGameHandler = () => {
-    this.giveRandomPhraseHandler(allPhrasesFromApi)
-    if (this.state.isGameEnded) {
-      this.setState({
-        isGameWon: false,
-        isGameEnded: false,
-        isGameInProgress: true,
-        mistakesLeft: 7,
-        timeToNextLetter: 7,
-        lettersToClick: [
-          { letter: 'q', isClicked: false, isHit: false },
-          { letter: 'w', isClicked: false, isHit: false },
-          { letter: 'e', isClicked: false, isHit: false },
-          { letter: 'r', isClicked: false, isHit: false },
-          { letter: 't', isClicked: false, isHit: false },
-          { letter: 'y', isClicked: false, isHit: false },
-          { letter: 'u', isClicked: false, isHit: false },
-          { letter: 'i', isClicked: false, isHit: false },
-          { letter: 'o', isClicked: false, isHit: false },
-          { letter: 'p', isClicked: false, isHit: false },
-          { letter: 'a', isClicked: false, isHit: false },
-          { letter: 's', isClicked: false, isHit: false },
-          { letter: 'd', isClicked: false, isHit: false },
-          { letter: 'f', isClicked: false, isHit: false },
-          { letter: 'g', isClicked: false, isHit: false },
-          { letter: 'h', isClicked: false, isHit: false },
-          { letter: 'j', isClicked: false, isHit: false },
-          { letter: 'k', isClicked: false, isHit: false },
-          { letter: 'l', isClicked: false, isHit: false },
-          { letter: 'z', isClicked: false, isHit: false },
-          { letter: 'x', isClicked: false, isHit: false },
-          { letter: 'c', isClicked: false, isHit: false },
-          { letter: 'v', isClicked: false, isHit: false },
-          { letter: 'b', isClicked: false, isHit: false },
-          { letter: 'n', isClicked: false, isHit: false },
-          { letter: 'm', isClicked: false, isHit: false },
-        ]
-      })
-
-    } else if (!this.state.isGameEnded) {
-      this.setState({ isGameInProgress: true, isGameEnded: false });
-    }
-
+    ...initialState
   };
 
-  startTimeToNextLetterHandler = () => {
-    if (this.state.isGameEnded) return;
-    this.ID = setInterval(() => {
-      this.setState({ timeToNextLetter: this.state.timeToNextLetter - 1 })
-    }, 1000);
+  componentDidMount() {
+    document.addEventListener("keydown", e =>
+      this.clickOrPressKeyHandler(e, e.key)
+    );
+    this.fetchAllPhrasesHandler();
   }
 
-  isSelectedLetterInPhraseHandler = (selectedLetterObj) => {
-    const { phraseToGuess } = this.state
-    const letterInPhrase = phraseToGuess.find(letterObj => letterObj.letter === selectedLetterObj.letter.toUpperCase())
-    const selectedLetter = selectedLetterObj.letter.toUpperCase()
-    selectedLetterObj.isClicked = true;
-    if (letterInPhrase) {
-      selectedLetterObj.isHit = true;
-      phraseToGuess.forEach(letterObj => {
-        if (letterObj.letter === selectedLetter) {
-          letterObj.isLetterShowed = true;
-        }
-      })
-    }
-    else {
-      this.setState({ mistakesLeft: this.state.mistakesLeft - 1 })
-    }
-  }
+  fetchAllPhrasesHandler = () => {
+    this.setState({ isLoading: true });
+    this.props.firebase.db.ref().once("value", snapshot => {
+      const allPhrasesFromApi = Object.entries(snapshot.val()).map(obj => obj);
+      this.setState({
+        allPhrasesFromApi,
+        isLoading: false
+      });
+    });
+  };
 
-  clickOrPressKeyLetterHandler = (e, key) => {
-    if (!this.state.isGameInProgress) return;
-    //Do only if game is not ended
-    if (this.state.isGameEnded || this.state.timeToNextLetter === 0) return;
-
-    const { lettersToClick, phraseToGuess, } = this.state
-    const clickedLetter = e.target.textContent
-    let pressedOrClickedLetter;
-
-    if (key) {
-      pressedOrClickedLetter = key.toUpperCase()
-    }
-    else if (clickedLetter) {
-      pressedOrClickedLetter = e.target.textContent;
-    }
-
-    const index = lettersToClick.findIndex(letter => letter.letter.toUpperCase() === pressedOrClickedLetter);
-
-    if (index === -1 || lettersToClick[index].isClicked) return
-
-    const selectedLetterObj = lettersToClick[index]
-    this.isSelectedLetterInPhraseHandler(selectedLetterObj)
-    clearInterval(this.ID)
-    this.startTimeToNextLetterHandler();
-    this.setState({ phraseToGuess, lettersToClick, timeToNextLetter: TIME_TO_NEXT_LETTER });
-  }
-
-
-  giveRandomPhraseHandler = (data) => {
-    //RANDOM CATEGORY 
-    const randomNumberForCategory = Math.floor(Math.random() * Object.keys(data).length);
-    const randomCategoryObject = Object.entries(data)[randomNumberForCategory];
-    const category = randomCategoryObject[0] //position [0] is always category name
-    //RANDOM PHRASE IN THAT CATEGORY
-    const randomNumberForPhrase = Math.floor(Math.random() * Object.keys(randomCategoryObject[1]).length);
-    const randomPhraseObject = Object.entries(randomCategoryObject[1])[randomNumberForPhrase];
-    const phrase = randomPhraseObject[0];   //position [0] is always phrase name
-    //HINT AND TITBIT IN THAT PHRASE
-    const hint = randomPhraseObject[1].hint; //we can easy do random hint or titbit if possible
-    const titbit = randomPhraseObject[1].titbit;
-
-
-    const phraseToGuess = [];
-    [...phrase].map((phrase, index) => {
-      return phraseToGuess.push({
-        letter: phrase.toUpperCase(),
-        id: index,
-        isLetterShowed: false,
-      })
-    })
-    phraseToGuess.filter(letterObj => (
-      letterObj.letter === " " || letterObj.letter === "," || letterObj.letter === "-" ? letterObj.isLetterShowed = true : letterObj.isLetterShowed = false)
-    )
+  startGameHandler = () => {
+    const randomPhrase = this.giveRandomPhraseHandler();
+    const { phraseToGuess, phraseInfo } = randomPhrase;
 
     this.setState({
+      isGameInProgress: true,
+      phraseToGuess,
+      phraseInfo,
+      isGameEnded: false,
+      isGameWon: false,
+      lettersToClick: [
+        { letter: "Q", isClicked: false, isHit: false },
+        { letter: "W", isClicked: false, isHit: false },
+        { letter: "E", isClicked: false, isHit: false },
+        { letter: "R", isClicked: false, isHit: false },
+        { letter: "T", isClicked: false, isHit: false },
+        { letter: "Y", isClicked: false, isHit: false },
+        { letter: "U", isClicked: false, isHit: false },
+        { letter: "I", isClicked: false, isHit: false },
+        { letter: "O", isClicked: false, isHit: false },
+        { letter: "P", isClicked: false, isHit: false },
+        { letter: "A", isClicked: false, isHit: false },
+        { letter: "S", isClicked: false, isHit: false },
+        { letter: "D", isClicked: false, isHit: false },
+        { letter: "F", isClicked: false, isHit: false },
+        { letter: "G", isClicked: false, isHit: false },
+        { letter: "H", isClicked: false, isHit: false },
+        { letter: "J", isClicked: false, isHit: false },
+        { letter: "K", isClicked: false, isHit: false },
+        { letter: "L", isClicked: false, isHit: false },
+        { letter: "Z", isClicked: false, isHit: false },
+        { letter: "X", isClicked: false, isHit: false },
+        { letter: "C", isClicked: false, isHit: false },
+        { letter: "V", isClicked: false, isHit: false },
+        { letter: "B", isClicked: false, isHit: false },
+        { letter: "N", isClicked: false, isHit: false },
+        { letter: "M", isClicked: false, isHit: false }
+      ],
+      timeToNextLetter: TIME_TO_NEXT_LETTER,
+      mistakesLeft: 7
+    });
+  };
+
+  giveRandom = i => Math.floor(Math.random() * i);
+
+  giveRandomPhraseHandler = () => {
+    const { allPhrasesFromApi } = this.state;
+    const { giveRandom } = this;
+
+    const randomCategory =
+      allPhrasesFromApi[giveRandom(allPhrasesFromApi.length)];
+
+    const allQuestionsInThisCategory = Object.entries(randomCategory[1]).map(
+      obj => obj
+    );
+    const randomQuestion =
+      allQuestionsInThisCategory[giveRandom(allQuestionsInThisCategory.length)];
+
+    const category = randomCategory[0];
+    const phrase = randomQuestion[0];
+    const { hint, titbit } = randomQuestion[1];
+
+    const phraseToGuess = [...phrase].map((letter, index) => ({
+      id: index,
+      letter: letter.toUpperCase(),
+      isLetterShowed:
+        letter === "," || letter === "-" || letter === " " ? true : false
+    }));
+
+    return {
       phraseToGuess,
       phraseInfo: {
         category,
         hint,
-        titbit,
+        titbit
       }
-    })
-
-  }
-
-
-  fetchDataHandler = () => {
-
-    axios.get(API)
-      .then(response => response.statusText ? response : Error)
-      .then(response => {
-        allPhrasesFromApi = response.data;
-        this.giveRandomPhraseHandler(response.data)
-      });
-  }
-
-
-  componentDidUpdate(prevProps, prevState) {
-    //END GAME HANDLER
-    if (this.state.isGameEnded) return;
-    const lettersToClick = prevState.lettersToClick;
-    const allLettersAreShowed = this.state.phraseToGuess.filter(phrase => !phrase.isLetterShowed).length === 0;
-    const noMistakesLeft = this.state.mistakesLeft === 0 && true;
-    if (allLettersAreShowed) this.setState({ isGameWon: true });
-    if (allLettersAreShowed || noMistakesLeft) {
-      clearInterval(this.ID)
-      clearTimeout(this.TimeoutID)
-      this.setState({
-        isGameEnded: true,
-        isGameInProgress: false,
-      })
-    };
-    //END GAME HANDLER
-
-    //AUTO-CLICK LETTER HANDLER
-    if (prevState.timeToNextLetter !== this.state.timeToNextLetter) {
-      const { phraseToGuess } = this.state
-      if (phraseToGuess.filter(phrase => !phrase.isLetterShowed).length === 0) return; // if the phrase is guessed
-      if (lettersToClick.filter(letterObj => !letterObj.isClicked).length === 0) return; // if all letters are clicked
-
-      const filteredLetters = lettersToClick.filter(letterToClick => !letterToClick.isClicked);
-      const random = Math.floor(Math.random() * filteredLetters.length);
-      const autoClicked = filteredLetters[random];   //this is random clicked letter (OBJECT)
-      if (this.state.timeToNextLetter === 0) {
-        this.isSelectedLetterInPhraseHandler(autoClicked);
-        this.setState({ phraseToGuess, lettersToClick });
-        clearInterval(this.ID);
-        this.TimeoutID = setTimeout(() => {
-          this.setState({ timeToNextLetter: TIME_TO_NEXT_LETTER })
-          this.startTimeToNextLetterHandler();
-        }, 1000);
-      };
     };
   };
 
+  clickOrPressKeyHandler = (e, keydownLetter) => {
+    const {
+      isGameInProgress,
+      timeToNextLetter,
+      isGameEnded,
+      lettersToClick
+    } = this.state;
+    console.log(keydownLetter);
+    if (!isGameInProgress || isGameEnded || timeToNextLetter === 0) {
+      return;
+    } else {
+      let keyPressedOrClickedLetter;
 
+      if (keydownLetter) {
+        keyPressedOrClickedLetter = keydownLetter.toUpperCase();
+      } else if (e.target.textContent) {
+        keyPressedOrClickedLetter = e.target.textContent;
+      }
 
-  componentDidMount() {
-    document.addEventListener('keydown', (e) => this.clickOrPressKeyLetterHandler(e, e.key));
-    this.fetchDataHandler();
+      const index = lettersToClick.findIndex(
+        ({ letter }) => letter === keyPressedOrClickedLetter
+      );
+
+      if (index === -1 || lettersToClick[index].isClicked) {
+        return;
+      } else {
+        const selectedLetterObj = lettersToClick[index];
+        return this.checkIfLetterIsInPhraseHandler(selectedLetterObj);
+      }
+    }
+  };
+
+  autoClickLetter = () => {
+    const { checkIfLetterIsInPhraseHandler, giveRandom } = this;
+    const { lettersToClick } = this.state;
+    const notClickedLetters = lettersToClick.filter(
+      letter => !letter.isClicked
+    );
+    const random = giveRandom(notClickedLetters.length);
+    const selectedLetter = notClickedLetters[random];
+    return checkIfLetterIsInPhraseHandler(selectedLetter);
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    //END GAME HANDLER
+    const { timeToNextLetter, mistakesLeft } = this.state;
+
+    if (prevState.mistakesLeft !== mistakesLeft && mistakesLeft === 0) {
+      clearInterval(this.ID);
+      this.setState({ isGameEnded: true, isGameInProgress: false });
+    }
+
+    if (
+      prevState.timeToNextLetter !== timeToNextLetter &&
+      timeToNextLetter === -1
+    ) {
+      this.autoClickLetter();
+      this.setState({ timeToNextLetter: TIME_TO_NEXT_LETTER });
+    }
   }
 
+  checkIfLetterIsInPhraseHandler = selectedLetterObj => {
+    this.startTimeToNextLetterHandler();
+    const { phraseToGuess, lettersToClick } = this.state;
+    const slicedPhrase = phraseToGuess.slice();
+    const slicedLettersToClick = lettersToClick.slice();
 
+    const letterToClickIndex = slicedLettersToClick.findIndex(
+      obj => obj.letter === selectedLetterObj.letter
+    );
+    slicedLettersToClick[letterToClickIndex].isClicked = true;
+
+    const letterInPhrase = phraseToGuess.find(
+      obj => obj.letter === selectedLetterObj.letter
+    );
+
+    if (letterInPhrase) {
+      slicedLettersToClick[letterToClickIndex].isHit = true;
+      slicedPhrase.forEach(
+        obj =>
+          obj.letter === selectedLetterObj.letter && (obj.isLetterShowed = true)
+      );
+      const isPhraseGuessed = this.checkIfAllLettersAreShowed();
+      if (isPhraseGuessed) {
+        clearInterval(this.ID);
+        this.setState({
+          isGameInProgress: false,
+          isGameEnded: true,
+          isGameWon: true
+        });
+      } else if (!isPhraseGuessed) {
+        this.setState({
+          phraseToGuess: slicedPhrase,
+          lettersToClick: slicedLettersToClick
+        });
+      }
+    } else if (!letterInPhrase) {
+      slicedLettersToClick[letterToClickIndex].isHit = false;
+      this.setState({
+        mistakesLeft: this.state.mistakesLeft - 1,
+        timeToNextLetter: TIME_TO_NEXT_LETTER
+      });
+    }
+  };
+
+  startTimeToNextLetterHandler = () => {
+    clearInterval(this.ID);
+    this.ID = setInterval(() => {
+      this.setState({ timeToNextLetter: this.state.timeToNextLetter - 1 });
+    }, 1000);
+  };
+
+  checkIfAllLettersAreShowed = () => {
+    const { phraseToGuess } = this.state;
+    const arrayOfBoolean = phraseToGuess.map(obj => obj.isLetterShowed);
+    const areAllLettersShowed = !arrayOfBoolean.includes(false);
+    return areAllLettersShowed;
+  };
 
   componentWillUnmount() {
-
-    document.removeEventListener('keydown', this.clickOrPressKeyLetterHandler())
+    document.removeEventListener("keydown", this.clickOrPressKeyHandler());
   }
 
   render() {
-    console.log(this.state.isGameEnded);
     const {
       phraseToGuess,
       lettersToClick,
@@ -264,37 +286,42 @@ class App extends Component {
       isGameEnded,
       phraseInfo,
       isGameWon,
-    } = this.state
+      isLoading
+    } = this.state;
+
+    const { category, hint, titbit } = phraseInfo;
 
     return (
-
-      <Layout
-        isGameInProgress={isGameInProgress}>
+      <Layout isGameInProgress={isGameInProgress}>
         <StartPage
           phraseToGuess={phraseToGuess}
           isGameEnded={isGameEnded}
           isGameInProgress={isGameInProgress}
-          startGame={this.startGameHandler} />
+          startGame={this.startGameHandler}
+          isLoading={isLoading}
+        />
         <InGamePage
           isGameEnded={isGameEnded}
           isGameInProgress={isGameInProgress}
-          phraseInfo={phraseInfo}
+          category={category}
+          hint={hint}
           phraseToGuess={phraseToGuess}
           lettersToClick={lettersToClick}
           timeToNextLetter={timeToNextLetter}
           mistakesLeft={mistakesLeft}
-          clickLetter={this.clickOrPressKeyLetterHandler}
+          clickLetter={this.clickOrPressKeyHandler}
           isGameWon={isGameWon}
         />
         <EndGamePage
-          titbit={phraseInfo.titbit}
-          startGame={this.startGameHandler}
+          titbit={titbit}
+          onClick={this.startGameHandler}
           phraseToGuess={phraseToGuess}
           isGameWon={isGameWon}
-          isGameEnded={isGameEnded} />
+          isGameEnded={isGameEnded}
+        />
       </Layout>
     );
   }
 }
 
-export default App;
+export default withFirebase(App);
