@@ -3,11 +3,13 @@ import styled, { css } from "styled-components";
 interface Props {
   isClicked: boolean;
   isHit: boolean;
+  disabled: any;
 }
 
-export const Letter = styled.span<Props>(
-  ({ isClicked, isHit }) => css`
+export const Letter = styled.button<Props>(
+  ({ isClicked, isHit, disabled }) => css`
     flex-basis: 10%;
+    border: none;
     height: 15%;
     margin: 1% 2%;
     display: flex;
@@ -15,6 +17,7 @@ export const Letter = styled.span<Props>(
     align-items: center;
     border-radius: 5px;
     font-weight: 700;
+    opacity: ${disabled && ".4"};
     transition: 0.2s ease all;
     transform: ${isClicked && "scale(0.9)"};
     background-color: ${isHit ? "#69a982" : isClicked ? "#d92121" : "#fff"};

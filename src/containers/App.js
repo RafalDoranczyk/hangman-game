@@ -5,6 +5,7 @@ import InGamePage from "../components/InGamePage/InGamePage";
 import EndGamePage from "../components/EndGamePage/EndGamePage";
 import { withFirebase } from "../hoc/Firebase";
 const TIME_TO_NEXT_LETTER = 5;
+const MISTAKES_LEFT = 7;
 const INITIAL_LETTERS_TO_CLICK = [
   { letter: "Q", isClicked: false, isHit: false },
   { letter: "W", isClicked: false, isHit: false },
@@ -48,7 +49,7 @@ const initialState = {
   },
   lettersToClick: INITIAL_LETTERS_TO_CLICK,
   timeToNextLetter: TIME_TO_NEXT_LETTER, //if time === 0 => random letter is clicked
-  mistakesLeft: 7 // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
+  mistakesLeft: MISTAKES_LEFT // if we select wrong letter => mistakes--. If mistakes ===0 => game is over
 };
 
 class App extends Component {
@@ -113,7 +114,7 @@ class App extends Component {
         { letter: "M", isClicked: false, isHit: false }
       ],
       timeToNextLetter: TIME_TO_NEXT_LETTER,
-      mistakesLeft: 7
+      mistakesLeft: MISTAKES_LEFT
     });
   };
 
@@ -160,7 +161,7 @@ class App extends Component {
       isGameEnded,
       lettersToClick
     } = this.state;
-    console.log(keydownLetter);
+
     if (!isGameInProgress || isGameEnded || timeToNextLetter === 0) {
       return;
     } else {

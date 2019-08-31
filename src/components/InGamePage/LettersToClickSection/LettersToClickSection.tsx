@@ -6,11 +6,17 @@ import LetterToClick from "./LetterToClick/LetterToClick";
 interface Props {
   lettersToClick: Array<any>;
   clickLetter: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
+  timeToNextLetter: number;
 }
 
-const LettersToClick: React.FC<Props> = ({ lettersToClick, clickLetter }) => {
+const LettersToClick: React.FC<Props> = ({
+  lettersToClick,
+  clickLetter,
+  timeToNextLetter
+}) => {
   const letters = lettersToClick.map(letterToClick => (
     <LetterToClick
+      timeToNextLetter={timeToNextLetter}
       clickLetter={e => clickLetter(e)}
       isClicked={letterToClick.isClicked}
       key={letterToClick.letter}
@@ -24,6 +30,7 @@ const LettersToClick: React.FC<Props> = ({ lettersToClick, clickLetter }) => {
 
 LettersToClick.propTypes = {
   lettersToClick: PropTypes.arrayOf(PropTypes.object).isRequired,
-  clickLetter: PropTypes.func.isRequired
+  clickLetter: PropTypes.func.isRequired,
+  timeToNextLetter: PropTypes.number.isRequired
 };
 export default LettersToClick;

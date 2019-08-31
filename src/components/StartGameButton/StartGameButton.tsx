@@ -13,12 +13,12 @@ const StartGameButton: React.SFC<Props> = ({
   isGameEnded
 }) => {
   return (
-    <S.StartGameButtonStyle
-      isGameEnded={isGameEnded}
-      disabled={isLoading}
-      onClick={onClick}
-    >
-      {isLoading ? "Loading..." : "Start game!"}
+    <S.StartGameButtonStyle disabled={isLoading} onClick={onClick}>
+      {isLoading
+        ? "Fetching phrases..."
+        : isGameEnded
+        ? "Play again"
+        : "Start game!"}
     </S.StartGameButtonStyle>
   );
 };

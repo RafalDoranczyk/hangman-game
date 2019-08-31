@@ -18,20 +18,12 @@ export const EndGameWrapper = styled.div<Props>(
     font-size: 14px;
     transform: ${isGameEnded ? "translateY(0)" : "translateY(-100%)"};
     opacity: ${isGameEnded ? "1" : "0"};
-    transition: 0.3s linear all;
+    transition: ${isGameEnded ? " 0.5s 0.8s linear all" : "0.3s ease all"};
     background-color: #644364;
     color: white;
     @media (orientation: landscape) {
       bottom: 0;
       right: 40%;
-    }
-    @media (orientation: portrait) and (min-width: ${props =>
-        props.theme.device.iPad}) {
-      font-size: 2rem;
-    }
-    @media (orientation: landscape) and (min-width: ${props =>
-        props.theme.device.iPad}) {
-      font-size: 1.6rem;
     }
   `
 );

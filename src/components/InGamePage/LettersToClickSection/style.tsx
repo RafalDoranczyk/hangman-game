@@ -13,14 +13,4 @@ export const LettersWrapper = styled.div`
     flex-grow: 1;
     width: 40%;
   }
-
-  @media (orientation: portrait) and (min-width: ${({ theme }) =>
-      theme.device.iPad}) {
-    font-size: 2rem;
-  }
-
-  @media (orientation: landscape) and (min-width: ${({ theme }) =>
-      theme.device.iPad}) {
-    font-size: 1.6rem;
-  }
 `;

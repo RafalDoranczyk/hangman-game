@@ -14,7 +14,7 @@ const StylesForAllParts = styled.div<Props>(
   ({ font }) => css`
     /* GIVE FONT PROPS IF U WANT MAKE BIGGER HANGMAN */
     font-size: ${font ? font : "10px"};
-    transition: 0.4s;
+    transition: 1s;
     @media (min-width: 1000px) {
       font-size: ${font ? font : "15px"};
     }

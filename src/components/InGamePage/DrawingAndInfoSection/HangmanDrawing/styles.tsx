@@ -15,14 +15,6 @@ export const HangmanWrapper = styled.div`
   font-size: 1rem;
   z-index: 1;
 
-  @media (orientation: landscape) and (min-width: ${props =>
-      props.theme.device.iPad}) {
-    font-size: 1.7rem;
-  }
-  @media (orientation: portrait) and (min-width: ${props =>
-      props.theme.device.iPad}) {
-    font-size: 1.7rem;
-  }
   * {
     position: absolute;
   }

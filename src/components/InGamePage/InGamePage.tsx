@@ -46,6 +46,7 @@ const InGamePage: React.FC<Props> = ({
         isGameWon={isGameWon}
       />
       <LettersToClickSection
+        timeToNextLetter={timeToNextLetter}
         lettersToClick={lettersToClick}
         clickLetter={clickLetter}
       />

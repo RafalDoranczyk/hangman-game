@@ -34,9 +34,10 @@ const LayoutWrapper = styled.div`
   transform: translate(-50%, -50%);
   overflow: hidden;
 
-  @media (min-width: ${props => props.theme.device.iPad}) {
+  @media (min-width: 1000px) {
     height: 70%;
     width: 70%;
+    border-radius: 10px;
   }
 `;
 

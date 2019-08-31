@@ -1,4 +1,10 @@
 import styled from "styled-components";
+import { number } from "prop-types";
+
+interface Props {
+  timeToNextLetter: number;
+}
+
 export const GameInfoWrapper = styled.div`
   flex-basis: 50%;
   padding: 5px;
@@ -46,14 +52,14 @@ const Box = styled.div`
   background-color: #977697;
   color: white;
   position: relative;
-
+  font-size: 16px;
   &::after {
     top: -20px;
     left: 0;
     width: 100%;
     height: 20px;
     color: #111;
-    font-size: 0.8em;
+    font-size: 0.6em;
   }
 `;
 
@@ -62,7 +68,10 @@ export const MistakesLeft = styled(Box)`
     content: "Mistakes left";
   }
 `;
-export const TimeToNextLetter = styled(Box)`
+export const TimeToNextLetter = styled(Box)<Props>`
+  transition: 0.3s linear opacity;
+  background-color: #533253;
+  opacity: ${({ timeToNextLetter }) => (timeToNextLetter === 0 ? ".4" : "1")};
   &::after {
     content: "Next letter in";
   }

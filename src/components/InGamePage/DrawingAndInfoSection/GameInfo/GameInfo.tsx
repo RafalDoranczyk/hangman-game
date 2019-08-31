@@ -24,7 +24,9 @@ const GameInfoSection: React.FC<Props> = ({
 
       <S.BoxWrapper>
         <S.MistakesLeft>{mistakesLeft}</S.MistakesLeft>
-        <S.TimeToNextLetter>{timeToNextLetter} </S.TimeToNextLetter>
+        <S.TimeToNextLetter timeToNextLetter={timeToNextLetter}>
+          {timeToNextLetter}
+        </S.TimeToNextLetter>
       </S.BoxWrapper>
     </S.GameInfoWrapper>
   );

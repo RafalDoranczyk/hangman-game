@@ -27,9 +27,7 @@ const EndGamePage: React.FC<Props> = ({
 
       <S.TitbitOrPhrase>{isGameWon ? titbit : guessedPhrase}</S.TitbitOrPhrase>
 
-      <StartGameButton isGameEnded={isGameEnded} onClick={onClick}>
-        Play again
-      </StartGameButton>
+      <StartGameButton isGameEnded={isGameEnded} onClick={onClick} />
     </S.EndGameWrapper>
   );
 };

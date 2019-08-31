@@ -10,6 +10,7 @@ export const InGamePageWrapper = styled.div<Props>`
   top: 0;
   left: 0;
   height: 100%;
+
   width: 100%;
   display: flex;
   flex-flow: column wrap;
@@ -22,14 +23,4 @@ export const InGamePageWrapper = styled.div<Props>`
   transition: ${({ isGameEnded }) =>
     isGameEnded ? ".4s .4s linear opacity" : ".4s linear opacity"};
   font-size: 1rem;
-
-  @media (orientation: portrait) and (min-width: ${({ theme }) =>
-      theme.device.iPad}) {
-    font-size: 2rem;
-  }
-
-  @media (orientation: landscape) and (min-width: ${({ theme }) =>
-      theme.device.iPad}) {
-    font-size: 1.6rem;
-  }
 `;
